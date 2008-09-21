@@ -1,5 +1,5 @@
 --TEST--
-Google_Maps_Bounds 
+Google_Maps_Bounds::create()
 --SKIPIF--
 <?php 
 include 'skipif.php';

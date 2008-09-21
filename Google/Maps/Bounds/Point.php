@@ -1,7 +1,20 @@
 <?php
 
-/* $Id$ $ */
-
+/*
+ * Google_Maps_Bounds_Point
+ *
+ * Copyright (c) 2008 Mika Tuupola
+ *
+ * Licensed under the MIT license:
+ *   http://www.opensource.org/licenses/mit-license.php
+ *
+ * Project home:
+ *   http://www.appelsiini.net/projects/google_maps
+ *
+ * Revision: $Id$
+ *
+ */
+ 
 require_once 'Google/Maps/Overload.php';
 require_once 'Google/Maps/Point.php';
 
@@ -46,5 +59,22 @@ class Google_Maps_Bounds_Point extends Google_Maps_Overload {
         $y = $this->getMaxY();
         return new Google_Maps_Point($x, $y);        
     }
+    
+    public function contains($location) {
+        $retval = false;
+        $point = $location;
+        if ('Google_Maps_Coordinate' == get_class($location)) {
+            $point = $location->toPoint();
+        }
+        
+        if ($point->getX() < $this->getMaxX() && $point->getX() > $this->getMinX() &&
+            $point->getY() < $this->getMaxY() && $point->getY() > $this->getMinY()) {
+                $retval = true;
+        }
+        
+        return $retval;
+        
+    }
+
         
 }
