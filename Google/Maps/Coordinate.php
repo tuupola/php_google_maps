@@ -16,6 +16,8 @@
  */
  
 require_once 'Google/Maps/Overload.php';
+require_once 'Google/Maps/Mercator.php';
+require_once 'Google/Maps/Point.php';
 
 class Google_Maps_Coordinate extends Google_Maps_Overload {
 
@@ -27,16 +29,16 @@ class Google_Maps_Coordinate extends Google_Maps_Overload {
         $this->setLon($lon);
     }
 
-    public function toPoint() {
-        
-        require_once 'Google/Maps/Point.php';
-        require_once 'Google/Maps/Mercator.php';
-        
+    public function toPoint() {        
         $lat = $this->getLat();
         $lon = $this->getLon();
         $x = Google_Maps_Mercator::LonToX($lon);
         $y = Google_Maps_Mercator::LatToY($lat);
         return new Google_Maps_Point($x, $y);
+    }
+    
+    public function __toString() {
+        return $this->getLat() . ',' . $this->getLon();
     }
     
 }

@@ -16,6 +16,10 @@
  */
  
 require_once 'Google/Maps/Overload.php';
+require_once 'Google/Maps/Coordinate.php';
+require_once 'Google/Maps/Point.php';
+require_once 'Google/Maps/Marker.php';
+require_once 'Google/Maps/Path.php';
 
 class Google_Maps extends Google_Maps_Overload {
         

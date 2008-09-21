@@ -17,12 +17,17 @@
  
 require_once 'Google/Maps/Overload.php';
 require_once 'Google/Maps/Coordinate.php';
+require_once 'Google/Maps/Point.php';
 
 class Google_Maps_Bounds extends Google_Maps_Overload {
         
     public function create($location_list) {
         $class_name  = get_class($location_list[0]);
         $type        = array_pop(explode("_", $class_name));
+        
+        if ('Marker' == $type) {
+            $type = 'Coordinate';
+        }
         
         unset($class_name);
         $class_name = 'Google_Maps_Bounds_' . ucfirst($type);

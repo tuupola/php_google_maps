@@ -36,6 +36,10 @@ class Google_Maps_Overload {
         }
         return $retval;  
     }
+    
+    function __autoload($class_name) {
+        print_r($class_name);
+    }    
 
     protected static function underscore($word) {
         $underscored = strtolower(preg_replace('/(?<=\\w)([A-Z])/', '_\\1', $word));
