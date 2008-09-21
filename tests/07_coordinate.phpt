@@ -6,7 +6,7 @@ include 'skipif.php';
 ?>
 --FILE--
 <?php 
-include 'skipif.php';
+require_once 'Google/Maps/Coordinate.php';
 
 $coord_1 = new Google_Maps_Coordinate(-85.0511287798, 180);
 $coord_2 = new Google_Maps_Coordinate(85.0511287798, -180);

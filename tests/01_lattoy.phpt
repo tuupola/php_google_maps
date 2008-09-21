@@ -6,7 +6,7 @@ include 'skipif.php';
 ?>
 --FILE--
 <?php 
-include 'skipif.php';
+require_once 'Google/Maps/Mercator.php';
 
 print $x = Google_Maps_Mercator::LatToY(24.5165921956) . "\n";
 print $x = Google_Maps_Mercator::LatToY(85.0511287798) . "\n";

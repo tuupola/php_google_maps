@@ -6,7 +6,7 @@ include 'skipif.php';
 ?>
 --FILE--
 <?php 
-include 'skipif.php';
+require_once 'Google/Maps/Bounds.php';
 
 $point_1 = new Google_Maps_Point(0, 0);
 $point_2 = new Google_Maps_Point(536870912, 536870912);
