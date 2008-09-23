@@ -24,7 +24,18 @@ class Google_Maps_Bounds_Point extends Google_Maps_Overload {
     protected $max_x;
     protected $max_y;
     
-    public function __construct($point_list) {
+    public function __construct($location_list) {
+        
+        /* Make sure everything is a point. */
+        $point_list = array();
+        foreach ($location_list as $location) {
+            if ('Google_Maps_Coordinate' == get_class($location)) {
+                $point_list[] = $location->toPoint();
+            } else {
+                $point_list[] = $location;
+            }
+        }
+        
         $point = array_pop($point_list);
         $this->setMinX($point->getX());
         $this->setMinY($point->getY());
@@ -71,8 +82,7 @@ class Google_Maps_Bounds_Point extends Google_Maps_Overload {
                 $retval = true;
         }
         
-        return $retval;
-        
+        return $retval;      
     }
 
         

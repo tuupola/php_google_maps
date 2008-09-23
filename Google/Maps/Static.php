@@ -46,6 +46,47 @@ class Google_Maps_Static extends Google_Maps_Overload {
         }        
     }
     
+    public function getCenter() {
+        $retval = $this->center;
+        if ('Google_Maps_Coordinate' != get_class($this->center)) {
+            $retval = $this->calculateCenter();
+        }
+        return $retval;
+    }
+
+    public function calculateCenter() {
+        /* Calculate average lat and lon of markers. */
+        $lat_sum = $lon_sum = 0;
+        foreach ($this->getMarkers() as $marker) {
+           $lat_sum += $marker->getLat();
+           $lon_sum += $marker->getLon();
+        }
+        $lat_avg = $lat_sum / count($this->getMarkers());
+        $lon_avg = $lon_sum / count($this->getMarkers());
+        
+        return new Google_Maps_Coordinate($lat_avg, $lon_avg);
+    }
+    
+    public function zoomToFit() {
+        $zoom    = 21;
+        $found   = false;
+        while ($found == false) {
+            $this->setZoom($zoom);
+            $map_bounds = $this->getBounds();
+            $found = true;
+            foreach ($this->getMarkers() as $marker) {
+                if ($map_bounds->contains($marker)) {
+                } else {
+                    $found = false;
+                    break;
+                }
+            }
+            $zoom--;
+        }
+        
+        return $zoom;
+    }
+    
     public function getMarkerBounds() {
         return Google_Maps_Bounds::create($this->getMarkers());
     }
@@ -60,7 +101,7 @@ class Google_Maps_Static extends Google_Maps_Overload {
         list($width, $height) = explode('x', $this->getSize());
         return $width;
     }
-
+    
     public function getHeight() {
         
         list($width, $height) = explode('x', $this->getSize());
@@ -71,8 +112,8 @@ class Google_Maps_Static extends Google_Maps_Overload {
         $delta_x  = round($this->getWidth() / 2);
         $delta_y  = round($this->getHeight() / 2);
 
-        $lat      = $this->center->getLat();
-        $lon      = $this->center->getLon();
+        $lat      = $this->getCenter()->getLat();
+        $lon      = $this->getCenter()->getLon();
         $zoom     = $this->getZoom();
         
         $north    = Google_Maps_Mercator::adjustLatByPixels($lat, $delta_y * -1, $zoom);
