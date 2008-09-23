@@ -50,8 +50,42 @@ class Google_Maps_Static extends Google_Maps_Overload {
         return Google_Maps_Bounds::create($this->getMarkers());
     }
 
+    public function showMarkerBounds() {
+        $marker_bounds = $this->getMarkerBounds();
+        $bounds_path   = $marker_bounds->getBoundsPath();
+        $this->setPath($bounds_path);
+    }
+    
+    public function getWidth() {
+        list($width, $height) = explode('x', $this->getSize());
+        return $width;
+    }
+
+    public function getHeight() {
+        
+        list($width, $height) = explode('x', $this->getSize());
+        return $height;
+    }
+
     public function getBounds() {
-        /* Return bounds of current map. */
+        $delta_x  = round($this->getWidth() / 2);
+        $delta_y  = round($this->getHeight() / 2);
+
+        $lat      = $this->center->getLat();
+        $lon      = $this->center->getLon();
+        $zoom     = $this->getZoom();
+        
+        $north    = Google_Maps_Mercator::adjustLatByPixels($lat, $delta_y * -1, $zoom);
+        $south    = Google_Maps_Mercator::adjustLatByPixels($lat, $delta_y, $zoom);
+        $west     = Google_Maps_Mercator::adjustLonByPixels($lon, $delta_x * -1, $zoom);
+        $east     = Google_Maps_Mercator::adjustLonByPixels($lon, $delta_x, $zoom);
+        
+        $north_west = new Google_Maps_Coordinate($north, $west);
+        $north_east = new Google_Maps_Coordinate($north, $east);
+        $south_west = new Google_Maps_Coordinate($south, $west);
+        $south_east = new Google_Maps_Coordinate($south, $east);
+        
+        return Google_Maps_Bounds::create(array($north_west, $south_east), 'coordinate');       
     }
     
     public function getMarkers($type = 'array') {

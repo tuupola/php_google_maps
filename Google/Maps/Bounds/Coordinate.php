@@ -25,7 +25,17 @@ class Google_Maps_Bounds_Coordinate extends Google_Maps_Overload {
     protected $max_lon;
     protected $max_lat;
     
-    public function __construct($coordinate_list) {
+    public function __construct($location_list) {
+
+        /* Make sure everything is a coordinate. */
+        $coordinate_list = array();
+        foreach ($location_list as $location) {
+            if ('Google_Maps_Point' == get_class($location)) {
+                $coordinate_list[] = $location->toCoordinate();
+            } else {
+                $coordinate_list[] = $location;
+            }
+        }
 
         $coordinate = array_pop($coordinate_list);
         $this->setMinLon($coordinate->getLon());
@@ -77,7 +87,7 @@ class Google_Maps_Bounds_Coordinate extends Google_Maps_Overload {
         
     }
     
-    public function getPathBox() {
+    public function getBoundsPath() {
         return array(new Google_Maps_Path($this->getMinLat(), $this->getMinLon()),
                      new Google_Maps_Path($this->getMinLat(), $this->getMaxLon()),
                      new Google_Maps_Path($this->getMaxLat(), $this->getMaxLon()),
