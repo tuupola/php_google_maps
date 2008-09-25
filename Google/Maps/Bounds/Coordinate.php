@@ -73,11 +73,8 @@ class Google_Maps_Bounds_Coordinate extends Google_Maps_Overload {
     }
     
     public function contains($location) {
-        $retval = false;
-        $coordinate = $location;
-        if ('Google_Maps_Point' == get_class($location)) {
-            $coordinate = $location->toCoordinate();
-        }
+        $retval     = false;
+        $coordinate = $location->toCoordinate();
         if ($coordinate->getLon() < $this->getMaxLon() && $coordinate->getLon() > $this->getMinLon() &&
             $coordinate->getLat() < $this->getMaxLat() && $coordinate->getLat() > $this->getMinLat()) {
                 $retval = true;

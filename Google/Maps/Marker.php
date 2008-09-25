@@ -30,11 +30,7 @@ class Google_Maps_Marker extends Google_Maps_Overload {
     }
     
     public function setCoordinate($location) {
-        if ('Google_Maps_Point' == get_class($location)) {
-            $this->coordinate = $location->toCoordinate();
-        } else {
-            $this->coordinate = $location;            
-        }
+        $this->coordinate = $location->toCoordinate();
     }
     
     public function getLat() {

@@ -72,10 +72,13 @@ class Google_Maps_Bounds_Point extends Google_Maps_Overload {
     
     public function contains($location) {
         $retval = false;
+        /*
         $point = $location;
         if ('Google_Maps_Coordinate' == get_class($location)) {
             $point = $location->toPoint();
         }
+        */
+        $point = $location->toPoint();
         
         if ($point->getX() < $this->getMaxX() && $point->getX() > $this->getMinX() &&
             $point->getY() < $this->getMaxY() && $point->getY() > $this->getMinY()) {

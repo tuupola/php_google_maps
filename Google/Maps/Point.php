@@ -36,5 +36,9 @@ class Google_Maps_Point extends Google_Maps_Overload {
         $lon = Google_Maps_Mercator::XToLon($x);
         return new Google_Maps_Coordinate($lat, $lon);
     }
+    
+    public function toPoint() {
+        return $this;
+    }
 
 }

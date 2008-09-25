@@ -37,6 +37,10 @@ class Google_Maps_Coordinate extends Google_Maps_Overload {
         return new Google_Maps_Point($x, $y);
     }
     
+    public function toCoordinate() {
+        return $this;
+    }
+    
     public function __toString() {
         return $this->getLat() . ',' . $this->getLon();
     }
