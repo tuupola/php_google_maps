@@ -32,6 +32,11 @@ class Google_Maps_Marker extends Google_Maps_Overload {
     public function setCoordinate($location) {
         $this->coordinate = $location->toCoordinate();
     }
+
+    /* TODO: this is an kludge. */
+    public function toCoordinate() {
+        return $this;
+    }
     
     public function getLat() {
         return $this->getCoordinate()->getLat();
