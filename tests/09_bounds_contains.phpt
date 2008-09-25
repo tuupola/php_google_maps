@@ -12,15 +12,15 @@ $point_1 = new Google_Maps_Point(0, 0);
 $point_2 = new Google_Maps_Point(536870912, 536870912);
 $point_3 = new Google_Maps_Point(355500011, 230704001);
 
-$bounds_1 = Google_Maps_Bounds::create(array($point_1, $point_2));
-$bounds_2 = Google_Maps_Bounds::create(array($point_3, $point_1));
+$bounds_1 = new Google_Maps_Bounds(array($point_1, $point_2));
+$bounds_2 = new Google_Maps_Bounds(array($point_3, $point_1));
 
 $coord_1 = new Google_Maps_Coordinate(-85.0511287798, 180);
 $coord_2 = new Google_Maps_Coordinate(85.0511287798, -180);
 $coord_3 = new Google_Maps_Coordinate(24.5165921956, 58.3813335747);
 
-$bounds_3 = Google_Maps_Bounds::create(array($coord_1, $coord_2));
-$bounds_4 = Google_Maps_Bounds::create(array($coord_3, $coord_1));
+$bounds_3 = new Google_Maps_Bounds(array($coord_1, $coord_2));
+$bounds_4 = new Google_Maps_Bounds(array($coord_3, $coord_1));
 
 
 
