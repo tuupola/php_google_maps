@@ -20,26 +20,83 @@ require_once 'Google/Maps/Coordinate.php';
 require_once 'Google/Maps/Point.php';
 
 class Google_Maps_Bounds extends Google_Maps_Overload {
-        
-    public function create($location_list, $type='') {
-        $class_name  = get_class($location_list[0]);
-        
-        if (trim($type)) {
-            $type = ucfirst($type);
-        } else {
-            $type = array_pop(explode("_", $class_name));    
+
+    protected $min_lon;
+    protected $min_lat;
+    protected $max_lon;
+    protected $max_lat;
+    
+    public function __construct($location_list) {
+
+        /* Make sure everything is a coordinate. */
+        $coordinate_list = array();
+        foreach ($location_list as $location) {
+            if ('Google_Maps_Point' == get_class($location)) {
+                $coordinate_list[] = $location->toCoordinate();
+            } else {
+                $coordinate_list[] = $location;
+            }
+        }
+
+        $coordinate = array_pop($coordinate_list);
+        $this->setMinLon($coordinate->getLon());
+        $this->setMinLat($coordinate->getLat());
+        $this->setMaxLon($coordinate->getLon());
+        $this->setMaxLat($coordinate->getLat());
+
+        foreach ($coordinate_list as $coordinate) {
+            if ($coordinate->getLon() < $this->getMinLon()) {
+                $this->setMinLon($coordinate->getLon());
+            }
+            if ($coordinate->getLon() > $this->getMaxLon()) {
+                $this->setMaxLon($coordinate->getLon());
+            }
+            if ($coordinate->getLat() < $this->getMinLat()) {
+                $this->setMinLat($coordinate->getLat());
+            }
+            if ($coordinate->getLat() > $this->getMaxLat()) {
+                $this->setMaxLat($coordinate->getLat());
+            }
         }
         
-        if ('Marker' == $type) {
-            $type = 'Coordinate';
-        }
-        
-        unset($class_name);
-        $class_name = 'Google_Maps_Bounds_' . ucfirst($type);
-        $file_name  = str_replace('_', DIRECTORY_SEPARATOR, $class_name).'.php';
-        require_once $file_name;
-        
-        return new $class_name($location_list);        
     }
     
+    public function getNorthWest($type='') {
+        $lat = $this->getMaxLat();
+        $lon = $this->getMinLon();
+        $retval =  new Google_Maps_Coordinate($lat, $lon);
+        if ('point' == $type) {
+            $retval = $retval->toPoint();
+        }
+        return $retval;
+    }
+    
+    public function getSouthEast($type='') {
+        $lat = $this->getMinLat();
+        $lon = $this->getMaxLon();
+        $retval = new Google_Maps_Coordinate($lat, $lon);
+        if ('point' == $type) {
+            $retval = $retval->toPoint();
+        }
+        return $retval;
+    }
+    
+    public function contains($location) {
+        $retval     = false;
+        $coordinate = $location->toCoordinate();
+        if ($coordinate->getLon() < $this->getMaxLon() && $coordinate->getLon() > $this->getMinLon() &&
+            $coordinate->getLat() < $this->getMaxLat() && $coordinate->getLat() > $this->getMinLat()) {
+                $retval = true;
+        }
+        return $retval;
+    }
+    
+    public function getPath() {
+        return array(new Google_Maps_Path($this->getMinLat(), $this->getMinLon()),
+                     new Google_Maps_Path($this->getMinLat(), $this->getMaxLon()),
+                     new Google_Maps_Path($this->getMaxLat(), $this->getMaxLon()),
+                     new Google_Maps_Path($this->getMaxLat(), $this->getMinLon()),
+                     new Google_Maps_Path($this->getMinLat(), $this->getMinLon()));
+    }
+        
 }

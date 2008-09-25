@@ -78,12 +78,12 @@ class Google_Maps_Static extends Google_Maps_Overload {
     }
     
     public function getMarkerBounds() {
-        return Google_Maps_Bounds::create($this->getMarkers());
+        return new Google_Maps_Bounds($this->getMarkers());
     }
 
     public function showMarkerBounds() {
         $marker_bounds = $this->getMarkerBounds();
-        $bounds_path   = $marker_bounds->getBoundsPath();
+        $bounds_path   = $marker_bounds->getPath();
         $this->setPath($bounds_path);
     }
     
@@ -92,13 +92,16 @@ class Google_Maps_Static extends Google_Maps_Overload {
         return $width;
     }
     
-    public function getHeight() {
-        
+    public function getHeight() {     
         list($width, $height) = explode('x', $this->getSize());
         return $height;
     }
 
-    public function getBounds() {
+    public function getBounds($zoom = '') {
+        $old_zoom = $this->getZoom();
+        if ($zoom) {
+            $this->setZoom($zoom);
+        }
         $delta_x  = round($this->getWidth() / 2);
         $delta_y  = round($this->getHeight() / 2);
 
@@ -115,8 +118,10 @@ class Google_Maps_Static extends Google_Maps_Overload {
         $north_east = new Google_Maps_Coordinate($north, $east);
         $south_west = new Google_Maps_Coordinate($south, $west);
         $south_east = new Google_Maps_Coordinate($south, $east);
+
+        $this->setZoom($old_zoom);
         
-        return Google_Maps_Bounds::create(array($north_west, $south_east), 'coordinate');       
+        return new Google_Maps_Bounds(array($north_west, $south_east));       
     }
     
     public function getMarkers($type = 'array') {
@@ -133,7 +138,7 @@ class Google_Maps_Static extends Google_Maps_Overload {
 
     public function getPath($type = 'array') {
         $retval = $this->path;
-        if ('string' == $type && count($this->path)) {
+        if ('string' == $type && is_array($this->path)) {
             $retval = '';
             foreach ($this->path as $coordinate) {
                 $retval .= $coordinate;
@@ -143,8 +148,9 @@ class Google_Maps_Static extends Google_Maps_Overload {
         return $retval;
     }
     
-    public function addMarker() {
-        
+    public function addMarker($marker) {
+        $this->markers[] = $marker;
+        return count($this->getMarkers());
     }
     
     public function removeMarker() {
