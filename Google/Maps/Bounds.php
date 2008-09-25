@@ -70,6 +70,16 @@ class Google_Maps_Bounds extends Google_Maps_Overload {
         }
         return $retval;
     }
+
+    public function getNorthEast($type='') {
+        $lat = $this->getMaxLat();
+        $lon = $this->getMaxLon();
+        $retval =  new Google_Maps_Coordinate($lat, $lon);
+        if ('point' == $type) {
+            $retval = $retval->toPoint();
+        }
+        return $retval;
+    }
     
     public function getSouthEast($type='') {
         $lat = $this->getMinLat();
@@ -80,7 +90,17 @@ class Google_Maps_Bounds extends Google_Maps_Overload {
         }
         return $retval;
     }
-    
+
+    public function getSouthWest($type='') {
+        $lat = $this->getMinLat();
+        $lon = $this->getMinLon();
+        $retval = new Google_Maps_Coordinate($lat, $lon);
+        if ('point' == $type) {
+            $retval = $retval->toPoint();
+        }
+        return $retval;
+    }
+
     public function contains($location) {
         $retval     = false;
         $coordinate = $location->toCoordinate();
@@ -92,11 +112,11 @@ class Google_Maps_Bounds extends Google_Maps_Overload {
     }
     
     public function getPath() {
-        return array(new Google_Maps_Path($this->getMinLat(), $this->getMinLon()),
-                     new Google_Maps_Path($this->getMinLat(), $this->getMaxLon()),
-                     new Google_Maps_Path($this->getMaxLat(), $this->getMaxLon()),
-                     new Google_Maps_Path($this->getMaxLat(), $this->getMinLon()),
-                     new Google_Maps_Path($this->getMinLat(), $this->getMinLon()));
+        return array(new Google_Maps_Path($this->getNorthWest()),
+                     new Google_Maps_Path($this->getNorthEast()),
+                     new Google_Maps_Path($this->getSouthEast()),
+                     new Google_Maps_Path($this->getSouthWest()),
+                     new Google_Maps_Path($this->getNorthWest()));
     }
         
 }
