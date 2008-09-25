@@ -17,7 +17,6 @@
  
 require_once 'Google/Maps/Overload.php';
 require_once 'Google/Maps/Bounds.php';
-require_once 'Net/URL.php';
 
 class Google_Maps_Static extends Google_Maps_Overload {
     
@@ -152,16 +151,15 @@ class Google_Maps_Static extends Google_Maps_Overload {
         
     }
 
-    public function __toString() {
-        /* Build the URL's for Static Maps API. */
-        $url = new Net_URL('http://maps.google.com/staticmap');
-        $url->addQueryString('center',  $this->getCenter());
-        $url->addQueryString('zoom',    $this->getZoom());
-        $url->addQueryString('markers', $this->getMarkers('string'));
-        $url->addQueryString('path',    $this->getPath('string'));
-        $url->addQueryString('size',    $this->getSize());
-        $url->addQueryString('key',     $this->getKey());
-        return $url->getUrl();
+    public function __toString() {        
+        $url['center'] = $this->getCenter()->__toString();
+        $url['zoom'] = $this->getZoom();
+        $url['markers'] = $this->getMarkers('string');
+        $url['path'] = $this->getPath('string');
+        $url['size'] = $this->getSize();
+        $url['key'] = $this->getKey();
+        
+        return 'http://maps.google.com/staticmap?' .  http_build_query($url);
     }
     
 }
