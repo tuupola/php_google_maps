@@ -24,11 +24,23 @@ class Google_Maps_Coordinate extends Google_Maps_Overload {
     protected $lat;
     protected $lon;
     
+    /**
+    * Class constructor.
+    *
+    * @param    float $lat Latitude
+    * @param    float $lon Longitude
+    * @return   object
+    */
     public function __construct($lat, $lon) {
         $this->setLat($lat);
         $this->setLon($lon);
     }
 
+    /**
+    * Return coordinate as point in Google Maps.
+    *
+    * @return   object Google_Maps_Point
+    */
     public function toPoint() {        
         $lat = $this->getLat();
         $lon = $this->getLon();
@@ -37,6 +49,12 @@ class Google_Maps_Coordinate extends Google_Maps_Overload {
         return new Google_Maps_Point($x, $y);
     }
     
+    /**
+    * Return coordinate as coordinate. This method exists only
+    * provide unified API between coordinate and point objects.
+    *
+    * @return   object Google_Maps_Coordinate
+    */
     public function toCoordinate() {
         return $this;
     }

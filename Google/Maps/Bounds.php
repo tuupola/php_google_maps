@@ -26,6 +26,13 @@ class Google_Maps_Bounds extends Google_Maps_Overload {
     protected $max_lon;
     protected $max_lat;
     
+    /**
+    * Class constructor.
+    *
+    * @param    array which can be mix of Google_Maps_Coordinate|Point objects.
+    * @return   object
+    */
+    
     public function __construct($location_list) {
 
         /* Make sure everything is a coordinate. */
@@ -60,7 +67,13 @@ class Google_Maps_Bounds extends Google_Maps_Overload {
         }
         
     }
-    
+
+    /**
+      * Return north-west corner of bounds.
+      *
+      * @return mixed Google_Maps_Coordinate or Google_Maps_Point
+      */
+          
     public function getNorthWest($type='') {
         $lat = $this->getMaxLat();
         $lon = $this->getMinLon();
@@ -71,6 +84,12 @@ class Google_Maps_Bounds extends Google_Maps_Overload {
         return $retval;
     }
 
+    /**
+      * Return north-east corner of bounds.
+      *
+      * @return mixed Google_Maps_Coordinate or Google_Maps_Point
+      */
+      
     public function getNorthEast($type='') {
         $lat = $this->getMaxLat();
         $lon = $this->getMaxLon();
@@ -81,6 +100,12 @@ class Google_Maps_Bounds extends Google_Maps_Overload {
         return $retval;
     }
     
+    /**
+      * Return souts-east corner of bounds.
+      *
+      * @return mixed Google_Maps_Coordinate or Google_Maps_Point
+      */
+      
     public function getSouthEast($type='') {
         $lat = $this->getMinLat();
         $lon = $this->getMaxLon();
@@ -91,6 +116,12 @@ class Google_Maps_Bounds extends Google_Maps_Overload {
         return $retval;
     }
 
+    /**
+      * Return south-west corner of bounds.
+      *
+      * @return mixed Google_Maps_Coordinate or Google_Maps_Point
+      */
+      
     public function getSouthWest($type='') {
         $lat = $this->getMinLat();
         $lon = $this->getMinLon();
@@ -101,6 +132,12 @@ class Google_Maps_Bounds extends Google_Maps_Overload {
         return $retval;
     }
 
+    /**
+      * Check if given coordinate or point is inside bounds
+      *
+      * @return boolean
+      */
+
     public function contains($location) {
         $retval     = false;
         $coordinate = $location->toCoordinate();
@@ -110,6 +147,14 @@ class Google_Maps_Bounds extends Google_Maps_Overload {
         }
         return $retval;
     }
+
+    /**
+      * Returns array of path objects which can be used for drawing
+      * borders of current bounds object into the static map. Can be
+      * used for debugging.
+      *
+      * @return array of Google_Maps_Path
+      */
     
     public function getPath() {
         return array(new Google_Maps_Path($this->getNorthWest()),
