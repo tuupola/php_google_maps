@@ -36,16 +36,7 @@ class Google_Maps_Static extends Google_Maps_Overload {
     public function __construct($params) {
         $this->setProperties($params);
     }
-    
-    public function setProperties($params) {
-        if (is_array($params)) {
-            foreach ($params as $key => $value) {
-                $method = 'set' . $key;
-                $this->$method($value);
-            }
-        }        
-    }
-    
+
     public function getCenter() {
         $retval = $this->center;
         if ('Google_Maps_Coordinate' != get_class($this->center)) {
@@ -143,7 +134,7 @@ class Google_Maps_Static extends Google_Maps_Overload {
 
     public function getPath($type = 'array') {
         $retval = $this->path;
-        if ('string' == $type) {
+        if ('string' == $type && count($this->path)) {
             $retval = '';
             foreach ($this->path as $coordinate) {
                 $retval .= $coordinate;
@@ -153,6 +144,14 @@ class Google_Maps_Static extends Google_Maps_Overload {
         return $retval;
     }
     
+    public function addMarker() {
+        
+    }
+    
+    public function removeMarker() {
+        
+    }
+
     public function __toString() {
         /* Build the URL's for Static Maps API. */
         $url = new Net_URL('http://maps.google.com/staticmap');

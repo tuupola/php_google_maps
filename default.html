@@ -8,20 +8,26 @@ unset($params);
 $params['size']    = '512x300';
 $params['zoom']    = 13;
 //$params['center']  = new Google_Maps_Coordinate('58.378700', '26.731110');
-$params['markers'] = array(new Google_Maps_Marker('58.378700', '26.731110'),
-                           new Google_Maps_Marker('58.368488', '26.768908'),
-                           new Google_Maps_Marker('58.379646', '26.764090'));
+
+$marker_1 = new Google_Maps_Marker(new Google_Maps_Coordinate('58.378700', '26.731110'));
+$marker_2 = new Google_Maps_Marker(new Google_Maps_Coordinate('58.368488', '26.768908'));
+$marker_3 = new Google_Maps_Marker(new Google_Maps_Coordinate('58.268488', '26.768908'));
+$marker_4 = new Google_Maps_Marker(new Google_Maps_Coordinate('58.379646', '26.764090'));
+
+$marker_1->setColor('green');
+$marker_2->setColor('blue');
+$marker_3->setColor('orange');
+
+$params['markers'] = array($marker_1, $marker_2, $marker_3, $marker_4);
 $params['key']     = trim(file_get_contents('api_key.txt'));
 
 $map = Google_Maps::create('static', $params);
-$map->showMarkerBounds();
+//$map->showMarkerBounds();
                            
 $map_bounds = $map->getBounds();
 //$map->setPath($map_bounds->getBoundsPath());
 
 $map->zoomToFit();
-
-/* $markers    = '58.378700,26.731110,green|58.368488,26.768908,green|58.379646,26.764090,green'; */
 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">

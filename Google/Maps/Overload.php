@@ -36,11 +36,16 @@ class Google_Maps_Overload {
         }
         return $retval;  
     }
-    
-    function __autoload($class_name) {
-        print_r($class_name);
-    }    
 
+    public function setProperties($params) {
+        if (is_array($params)) {
+            foreach ($params as $key => $value) {
+                $method = 'set' . $key;
+                $this->$method($value);
+            }
+        }        
+    }
+    
     protected static function underscore($word) {
         $underscored = strtolower(preg_replace('/(?<=\\w)([A-Z])/', '_\\1', $word));
         $underscored = strtolower(preg_replace('/([0-9])([a-z])/', '\\1_\\2', $underscored));        
