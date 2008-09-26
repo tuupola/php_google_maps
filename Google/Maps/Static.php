@@ -181,9 +181,11 @@ class Google_Maps_Static extends Google_Maps_Overload {
         $retval = $this->markers;
         if ('string' == $type) {
             $retval = '';
-            foreach ($this->markers as $marker) {
-                $retval .= $marker;
-                $retval .= '|';
+            if (is_array($this->markers)) {
+                foreach ($this->markers as $marker) {
+                    $retval .= $marker;
+                    $retval .= '|';
+                }                
             }
         }
         return $retval;
