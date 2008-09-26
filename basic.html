@@ -154,12 +154,19 @@ $map->showMarkerBounds();
 ?>
       <pre>$map->showMarkerBounds();</pre>
     </p>
-	  <?php print $map->toImgTag(); ?>
+	  <?php print $map->toImgTag(); ?><br /><br />
+	  
+	  <h3>Where's the Source?</h3>
+	  <p>
+	    Everything is still pretty much alpha quality. API can change anytime. If you want to play
+	    around with code you can check it out from <a href="http://svn.appelsiini.net/svn/php/trunk/Google_Maps/">subversion</a>.
+    </p>
+    <p>
+      <pre>svn co http://svn.appelsiini.net/svn/php/trunk/Google_Maps/</pre>
+    </p>
 	  
 	</div>	
 </div>
-
-
 
   <hr class="space" />
 
@@ -168,8 +175,8 @@ $map->showMarkerBounds();
 
     <!-- sidebar -->
     <div class="span-5 push-1 last" id="sidebar">
-        <br /><br />
-        <a href="http://twitter.com/tuupola"><img src="http://www.appelsiini.net/images/twitter3.png" alt="@tuupola" /></a>
+      <br /><br />
+      <a href="http://twitter.com/tuupola"><img src="http://www.appelsiini.net/images/twitter3.png" alt="@tuupola" /></a>
     </div>
     <!-- /sidebar -->
 
@@ -178,7 +185,7 @@ $map->showMarkerBounds();
   <script src="http://www.google-analytics.com/urchin.js" type="text/javascript"></script>
   <script type="text/javascript">
     _uacct = "UA-190966-1";
-    //urchinTracker();
+    urchinTracker();
   </script>
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.2.6/jquery.min.js" type="text/javascript" charset="utf-8"></script>
 </body>
