@@ -39,8 +39,6 @@ class Google_Maps_Mercator {
         return (pi() / 2 - 2 * atan(exp((round($y) - self::$offset) / self::$radius))) * 180 / pi(); 
     }
 
-    /* TODO: Clean up rest of this. */
-
     static function adjustLonByPixels($lon, $delta, $zoom) {
         return self::XToLon(self::LonToX($lon) + ($delta << (21 - $zoom)));
     }
@@ -49,23 +47,5 @@ class Google_Maps_Mercator {
         return self::YToLat(self::LatToY($lat) + ($delta << (21 - $zoom)));
     }
 
-    static function getLatLonBounds($lat_avg, $lon_avg, $map_height, $map_width, $zoom) {
-        $top_left_lat      = Google_Maps::adjustLatByPixels($lat_avg, $map_height / 2 * -1, $zoom);
-        $top_left_lon      = Google_Maps::adjustLonByPixels($lon_avg, $map_width / 2 * -1, $zoom);
-        $bottom_right_lat  = Google_Maps::adjustLatByPixels($lat_avg, $map_height / 2, $zoom);
-        $bottom_right_lon  = Google_Maps::adjustLonByPixels($lon_avg, $map_width / 2, $zoom);
-        return array($top_left_lat, $top_left_lon, $bottom_right_lat, $bottom_right_lon);
-    }
 
 }
-    /*
-    print $x = Google_Maps::LtoX(58.38133351447725) . "\n";
-    print $y = Google_Maps::LtoY(24.516592025756836) . "\n";
-    print $x = Google_Maps::XtoL($x) . "\n";
-    print $y = Google_Maps::YtoL($y) . "\n";
-    print Google_Maps::adjustLonByPixels(58.38133351447725, 100, 10) . "\n";
-    print Google_Maps::adjustLatByPixels(24.516592025756836, 100, 10) . "\n";
-    */
-
-
- 
