@@ -9,12 +9,9 @@ $map->setCenter(new Google_Maps_Coordinate('58.368488', '26.768908'));
 $map->setZoom(8);
 $map->setKey(trim(file_get_contents('api_key.txt')));
 
+$zoom = Google_Maps_Control::create('zoom');
 
-/*
 
-$map->showMarkerBounds();                           
-$map->zoomToFit();
-*/
 //$map_bounds = $map->getBounds(12);
 //$map->setPath($map_bounds->getPath());
 
@@ -153,6 +150,23 @@ $map->zoomToFit();</pre>
 $map->showMarkerBounds();
 ?>
       <pre>$map->showMarkerBounds();</pre>
+    </p>
+	  <?php print $map->toImgTag(); ?><br /><br />
+	  
+	  <h3>Show Map Bounds at Chosen Zoom Level</h3>
+	  <p>
+	    You can also calculate and show map bounds at any zoom level. Example below draws map bounds at
+	    zoom level 8. Map itself is at zoom level 7.
+	  </p>
+	  <p>
+<?php
+$map->setZoom(7);
+$map_bounds = $map->getBounds(8);
+$map->setPath($map_bounds->getPath());
+?>
+      <pre>$map->setZoom(7);
+$map_bounds = $map->getBounds(8);
+$map->setPath($map_bounds->getPath());</pre>
     </p>
 	  <?php print $map->toImgTag(); ?><br /><br />
 	  
