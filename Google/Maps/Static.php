@@ -21,7 +21,7 @@ require_once 'Google/Maps/Bounds.php';
 class Google_Maps_Static extends Google_Maps_Overload {
     
     protected $center;
-    protected $zoom;
+    protected $zoom = 8;
     protected $size;
     protected $format;
     protected $maptype;
@@ -46,16 +46,36 @@ class Google_Maps_Static extends Google_Maps_Overload {
     }
 
     /**
-    * Return center of the map. If center is not set is it calculated.
+    * Return center of the map. If center is not set is it calculated from markers.
+    * If map has no markers return default center (which is Tallinn).
     *
     * @return   object Google_Maps_Coordinate
     */
     public function getCenter() {
         $retval = $this->center;
         if ('Google_Maps_Coordinate' != get_class($this->center)) {
-            $retval = $this->calculateCenter();
+            if (count($this->getMarkers())) {
+                $retval = $this->calculateCenter();                
+            } else {
+                return new Google_Maps_Coordinate(59.439000, 24.750100);
+            }
         }
         return $retval;
+    }
+
+    /**
+    * Set center of the map. Converts lat,lon string to Google_Maps_Coordinate
+    * when needed.
+    *
+    * @param    mixed lat,lon string or Google_Maps_Coordinate
+    */
+    public function setCenter($location) {
+        if ('Google_Maps_Coordinate' != get_class($this->center)) {
+            list($lat, $lon) = explode(',', $location);
+            $this->center = new Google_Maps_Coordinate($lat, $lon);
+        } else {
+            $this->center = $location;
+        }
     }
 
     /**
@@ -376,11 +396,11 @@ class Google_Maps_Static extends Google_Maps_Overload {
     public function toHtml() {
         $retval  = sprintf('<div id="map" style="width:%dpx; height:%dpx">', 
                            $this->getWidth(), $this->getHeight());
+        $retval .= $this->toImgTag();
         $retval .= '<div id="controls">';
         foreach ($this->getControls() as $control) {
             $retval .= $control->toHtml($this);
         }
-        $retval .= $this->toImgTag();
         $retval .= '</div>';
         $retval .= '</div>';
 
