@@ -57,6 +57,7 @@ class Google_Maps_Static extends Google_Maps_Overload {
             if (count($this->getMarkers())) {
                 $retval = $this->calculateCenter();                
             } else {
+                /* Center was not set and could not calculate. Return default. */
                 return new Google_Maps_Coordinate(59.439000, 24.750100);
             }
         }
