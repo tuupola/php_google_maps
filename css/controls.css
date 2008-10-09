@@ -1,0 +1,65 @@
+/* @override http://127.0.0.1/~tuupola/php/Google_Maps/css/controls.css */
+
+/* Google controls */
+
+#controls {
+  width: 37px; 
+  /* height: 94px; */
+  position: relative; 
+  left: 7px; 
+  top: 7px;
+}
+
+#controls img {
+  border: none;
+  clear: none;
+}
+
+#pan_north {
+  position: absolute; 
+  left: 9px; 
+  top: 0px; 
+  width: 18px; 
+  height: 18px;
+}
+
+#pan_south {
+  position: absolute; 
+  left: 9px; 
+  top: 36px; 
+  width: 18px; 
+  height: 18px;
+}
+
+#pan_west {
+  position: absolute; 
+  left: 0px; 
+  top: 18px; 
+  width: 18px; 
+  height: 18px;
+}
+
+#pan_east {
+  position: absolute; 
+  left: 18px; 
+  top: 18px; 
+  width: 18px; 
+  height: 18px;
+}
+
+#zoom_in {
+  position: absolute; 
+  left: 9px; 
+  top: 57px; 
+  width: 18px; 
+  height: 18px;
+}
+
+#zoom_out {
+  position: absolute; 
+  left: 9px; 
+  top: 75px;  
+  width: 18px; 
+  height: 18px;
+}
+

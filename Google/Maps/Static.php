@@ -25,13 +25,16 @@ class Google_Maps_Static extends Google_Maps_Overload {
     protected $size;
     protected $format;
     protected $maptype;
-    protected $markers;
+    protected $markers = array();
     protected $path;
     protected $span;
     protected $frame;
     protected $language;
     protected $key;
-        
+    protected $controls = array();
+    protected $min_zoom = 1;
+    protected $max_zoom = 21;
+    
     /**
     * Class constructor.
     *
@@ -232,21 +235,129 @@ class Google_Maps_Static extends Google_Maps_Overload {
     }
 
     /**
-    * Return image URL for current map.
+    * Add control to map. 
     * 
-    * @return   string Static map image URL.
+    * @param    object Google_Maps_Control
+    * @return   integer Total number of controls in map.
     */
-    public function toUrl() {        
+    public function addControl($control) {
+        $this->controls[] = $control;
+        return count($this->getControls());
+    }
+    
+    /**
+    * Remove controls from map.
+    * 
+    * @param    object Google_Maps_Control
+    * @return   integer Total number of controls in map.
+    */
+    public function removeControl() {
+        
+    }   
+    
+    /**
+    * Zoom out one level
+    * 
+    * @return   integer New zoom level.
+    */
+    public function zoomOut() {
+        $new_zoom = max($this->getMinZoom(), $this->getZoom() - 1);
+        $this->setZoom($new_zoom);
+        return $new_zoom;
+    }
+
+    /**
+    * Zoom in one level
+    * 
+    * @return   integer New zoom level.
+    */
+    public function zoomIn() {
+        $new_zoom = min($this->getMaxZoom(), $this->getZoom() + 1);
+        $this->setZoom($new_zoom);
+        return $new_zoom;
+    }
+
+    /**
+    * Pan north by pixels
+    * 
+    * @return   object Google_Maps_Coordinate
+    */
+    public function panNorth($pixels) {
+        $center = $this->getCenter();    
+        $new_lat = Google_Maps_Mercator::adjustLatByPixels($center->getLat(), $pixels * -1,  $this->getZoom());
+        $center->setLat($new_lat);
+        $this->setCenter($center);
+        return $center;
+    }
+
+    /**
+    * Pan south by pixels
+    * 
+    * @return   object Google_Maps_Coordinate
+    */
+    public function panSouth($pixels) {
+        $center = $this->getCenter();    
+        $new_lat = Google_Maps_Mercator::adjustLatByPixels($center->getLat(), $pixels,  $this->getZoom());
+        $center->setLat($new_lat);
+        $this->setCenter($center);
+        return $center;
+    }
+
+    /**
+    * Pan west by pixels
+    * 
+    * @return   object Google_Maps_Coordinate
+    */
+    public function panWest($pixels) {
+        $center = $this->getCenter();    
+        $new_lon = Google_Maps_Mercator::adjustLonByPixels($center->getLon(), $pixels * -1,  $this->getZoom());
+        $center->setLon($new_lon);
+        $this->setCenter($center);
+        return $center;
+    }
+    
+    /**
+    * Pan east by pixels
+    * 
+    * @return   object Google_Maps_Coordinate
+    */
+    public function panEast($pixels) {
+        $center = $this->getCenter();    
+        $new_lon = Google_Maps_Mercator::adjustLonByPixels($center->getLon(), $pixels, $this->getZoom());
+        $center->setLon($new_lon);
+        $this->setCenter($center);
+        return $center;
+    }
+
+
+    /**
+    * Return image URL query string for current map.
+    * 
+    * @return   string Static map image URL querystring.
+    */
+    public function toQueryString($include_key = false) {        
         $url['center'] = $this->getCenter()->__toString();
         $url['zoom'] = $this->getZoom();
         $url['markers'] = $this->getMarkers('string');
         $url['path'] = $this->getPath('string');
         $url['size'] = $this->getSize();
-        $url['key'] = $this->getKey();
         
-        return 'http://maps.google.com/staticmap?' .  http_build_query($url);
+        if ($include_key) {
+            $url['key'] = $this->getKey();            
+        }
+        
+        return http_build_query($url);
     }
-    
+
+    /**
+    * Return image URL for current map.
+    * 
+    * @return   string Static map image URL.
+    */
+    public function toUrl() {                
+        return 'http://maps.google.com/staticmap?' . $this->toQueryString(true);
+    }
+        
     /**
     * Return image tag for current map.
     * 
@@ -255,6 +366,26 @@ class Google_Maps_Static extends Google_Maps_Overload {
     public function toImgTag() {
         return sprintf('<img src="%s" width="%d" height="%d" alt="" />',
                         $this->toUrl(), $this->getWidth(), $this->getHeight());
+    }
+    
+    /**
+    * Return full HTML for current map. Including controls and markers.
+    * 
+    * @return   string Static map HTML.
+    */
+    public function toHtml() {
+        $retval  = sprintf('<div id="map" style="width:%dpx; height:%dpx">', 
+                           $this->getWidth(), $this->getHeight());
+        $retval .= '<div id="controls">';
+        foreach ($this->getControls() as $control) {
+            $retval .= $control->toHtml($this);
+        }
+        $retval .= $this->toImgTag();
+        $retval .= '</div>';
+        $retval .= '</div>';
+
+
+        return $retval;
     }
     
     public function __toString() {

@@ -1,0 +1,115 @@
+<?php
+
+require_once 'Google/Maps.php';
+
+$map = Google_Maps::create('static');
+
+$map->setSize('540x300');
+
+$zoom = isset($_GET['zoom']) ? $_GET['zoom'] : 8;
+$map->setZoom($zoom);
+
+if (isset($_GET['center'])) {
+    list($center_lat, $center_lon) = explode(',', $_GET['center']);
+    $center = new Google_Maps_Coordinate($center_lat, $center_lon);    
+} else {
+  $center = new Google_Maps_Coordinate('58.368488', '26.768908');
+}
+$map->setCenter($center);
+
+$map->setKey(trim(file_get_contents('api_key.txt')));
+
+$zoom = Google_Maps_Control::create('zoom');
+$map->addControl($zoom);
+
+$pan = Google_Maps_Control::create('pan');
+$map->addControl($pan);
+
+?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <title>Google Maps PHP Class - Static Map Demo</title>
+  <link href="http://www.appelsiini.net/stylesheets/screen.css" rel="stylesheet" type="text/css" />
+  <link href="http://www.appelsiini.net/stylesheets/main.css" rel="stylesheet" type="text/css" />
+  <link href="css/controls.css" rel="stylesheet" type="text/css" />
+  <link rel="alternate" type="application/atom+xml" href="http://feeds.feedburner.com/tuupola" title="Atom feed" />
+</head>
+<body>
+  <div class="container"> 
+
+    <!-- header -->
+    <div id="header" class="span-20">
+      <div class="span-11">
+                
+        <h1>PHP Google Static Maps</h1><br />
+        <p>Programmatically Create Google Static Maps With PHP.</p>
+         
+      </div>
+      <div class="span-9 last">
+        <ul id="nav">        
+          <li id="first"><a href="http://www.appelsiini.net/">weblog</a></li>
+          <li><a href="http://www.appelsiini.net/projects" class="last">projects</a></li>
+          <!--
+          <li><a href="http://www.appelsiini.net/cv" class="last">cv</a></li>
+          -->
+        </ul>
+      </div>
+    </div>
+    <!-- /header -->
+
+    <!-- content -->
+    <div class="span-14" id="content">
+    
+  
+<div class="entry">
+
+	<div class="entrytitle">
+		<h2>Quick and Dirty Usage Demo</h2> 
+		<h4>This page demonstrates some of the options currently available.</h4>
+	</div>
+	<div class="entrybody">
+	  <p>
+	    Basic map is create using <i>Google_Maps::create('static')</i> factory method. 
+	    If no markers are set you need to set the center of the map.
+	  </p>
+	  <p>
+      <pre>require_once 'Google/Maps.php';
+
+$map = Google_Maps::create('static');
+
+$map->setSize('540x300');
+$map->setCenter(new Google_Maps_Coordinate('58.368488', '26.768908'));
+$map->setZoom(8);
+$map->setKey(API_KEY);</pre>
+    </p>
+    <?php print $map->toHtml(); ?><br /><br />
+	  
+	</div>	
+</div>
+
+  <hr class="space" />
+
+    </div>
+    <!-- /content -->
+
+    <!-- sidebar -->
+    <div class="span-5 push-1 last" id="sidebar">
+      <br /><br />
+      <a href="http://twitter.com/tuupola"><img src="http://www.appelsiini.net/images/twitter3.png" alt="@tuupola" /></a>
+    </div>
+    <!-- /sidebar -->
+
+  </div>      
+  <script src="/mint/?js" type="text/javascript"></script>
+  <script src="http://www.google-analytics.com/urchin.js" type="text/javascript"></script>
+  <script type="text/javascript">
+    _uacct = "UA-190966-1";
+    urchinTracker();
+  </script>
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.2.6/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+</body>
+</html>
+
