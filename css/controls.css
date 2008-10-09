@@ -2,9 +2,13 @@
 
 /* Google controls */
 
+#map img {
+  float: left;
+}
+
 #controls {
   width: 37px; 
-  /* height: 94px; */
+  height: 94px;
   position: relative; 
   left: 7px; 
   top: 7px;

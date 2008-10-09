@@ -4,20 +4,9 @@ require_once 'Google/Maps.php';
 
 $map = Google_Maps::create('static');
 
-$map->setSize('540x300');
-
-$zoom = isset($_GET['zoom']) ? $_GET['zoom'] : 8;
-$map->setZoom($zoom);
-
-if (isset($_GET['center'])) {
-    list($center_lat, $center_lon) = explode(',', $_GET['center']);
-    $center = new Google_Maps_Coordinate($center_lat, $center_lon);    
-} else {
-  $center = new Google_Maps_Coordinate('58.368488', '26.768908');
-}
-$map->setCenter($center);
-
 $map->setKey(trim(file_get_contents('api_key.txt')));
+$map->setSize('540x300');
+$map->setProperties($_GET);
 
 $zoom = Google_Maps_Control::create('zoom');
 $map->addControl($zoom);
@@ -67,28 +56,38 @@ $map->addControl($pan);
 <div class="entry">
 
 	<div class="entrytitle">
-		<h2>Quick and Dirty Usage Demo</h2> 
-		<h4>This page demonstrates some of the options currently available.</h4>
+		<h2>Add Controls to Static Map</h2> 
+		<h4>This page demonstrates how to add zoom and pan controls to static map.</h4>
 	</div>
 	<div class="entrybody">
+    <?php print $map->toHtml(); ?><br /><br />
 	  <p>
-	    Basic map is create using <i>Google_Maps::create('static')</i> factory method. 
-	    If no markers are set you need to set the center of the map.
+	    Start by creating static map with <i>Google_Maps::create('static')</i> factory method. 
+	    Create controls using <i>Google_Maps_Control::create('type')</i>. Created control can 
+	    be added to map using <i>$map->addControl($control)</i> method.
 	  </p>
 	  <p>
       <pre>require_once 'Google/Maps.php';
 
 $map = Google_Maps::create('static');
 
+$map->setKey(API_KEY);
 $map->setSize('540x300');
-$map->setCenter(new Google_Maps_Coordinate('58.368488', '26.768908'));
-$map->setZoom(8);
-$map->setKey(API_KEY);</pre>
+$map->setProperties($_GET);
+
+$zoom = Google_Maps_Control::create('zoom');
+$map->addControl($zoom);
+$pan = Google_Maps_Control::create('pan');
+$map->addControl($pan);</pre>
     </p>
-    <?php print $map->toHtml(); ?><br /><br />
 	  
 	</div>	
 </div>
+
+
+  </div>
+</div>
+
 
   <hr class="space" />
 
