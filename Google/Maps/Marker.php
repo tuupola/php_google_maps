@@ -108,7 +108,8 @@ class Google_Maps_Marker extends Google_Maps_Overload {
     }
     
     public function __toString() {
-        return $this->getLat() . ',' . $this->getLon() . ','. $this->getColor() . $this->getSize() . $this->getCharacter();
+        $retval = $this->getLat() . ',' . $this->getLon() . ','. $this->getColor() . $this->getSize() . $this->getCharacter();
+        return preg_replace('/,$/', '', $retval);
     }
         
 }

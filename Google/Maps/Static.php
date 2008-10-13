@@ -212,9 +212,38 @@ class Google_Maps_Static extends Google_Maps_Overload {
                     $retval .= $marker;
                     $retval .= '|';
                 }                
+                $retval = preg_replace('/\|$/', '', $retval);
             }
         }
         return $retval;
+    }
+
+    /**
+    * Return markers of current map in either array or as a string
+    * which can be used in image URL.
+    *
+    * @param    mixed array or string
+    * @return   integer number of markers
+    */
+    public function setMarkers($markers) {
+        
+        if (is_array($markers)) {
+            $this->markers = $markers;
+        } elseif (is_string($markers)) {
+            $marker_array = explode('|', $markers);
+            $this->markers = array();
+            foreach ($marker_array as $marker) {
+                unset($params);
+                @list($lat, $lon, $color) = explode(',', $marker);
+                $params['color'] = $color;
+                $coordinate = new Google_Maps_Coordinate($lat, $lon);
+                $this->addMarker(new Google_Maps_Marker($coordinate, $params));
+            }
+        } else {
+            $this->markers = array();
+        }
+
+        return count($this->getMarkers());
     }
 
     /**
@@ -358,14 +387,14 @@ class Google_Maps_Static extends Google_Maps_Overload {
     * 
     * @return   string Static map image URL querystring.
     */
-    public function toQueryString($include_key = false) {        
+    public function toQueryString($include_all = false) {        
         $url['center'] = $this->getCenter()->__toString();
-        $url['zoom'] = $this->getZoom();
-        $url['markers'] = $this->getMarkers('string');
-        $url['path'] = $this->getPath('string');
-        $url['size'] = $this->getSize();
         
-        if ($include_key) {
+        if ($include_all) {
+            $url['zoom'] = $this->getZoom();
+            $url['markers'] = $this->getMarkers('string');
+            $url['path'] = $this->getPath('string');
+            $url['size'] = $this->getSize();
             $url['key'] = $this->getKey();            
         }
         
