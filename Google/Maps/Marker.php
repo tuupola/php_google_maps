@@ -37,6 +37,32 @@ class Google_Maps_Marker extends Google_Maps_Overload {
     }
     
     /**
+    * Return imagemap area. Used for clickable markers in static map.
+    *
+    * @return   string
+    */
+    public function toArea(Google_Maps_Static $map) {
+        $zoom     = $map->getZoom();
+        $target_x = $this->toPoint()->getX();
+        $target_y = $this->toPoint()->getY();
+        $center_x = $map->getCenter()->toPoint()->getX();
+        $center_y = $map->getCenter()->toPoint()->getY();
+        
+        $delta_x  = ($target_x - $center_x) >> (21 - $zoom);
+        $delta_y  = ($target_y - $center_y) >> (21 - $zoom);
+        
+        
+        $center_offset_x = round($map->getWidth() / 2);
+        $center_offset_y = round($map->getHeight() / 2);
+        
+        $marker_x = $center_offset_x + $delta_x;
+        $marker_y = $center_offset_y + $delta_y - 20;
+        
+        return sprintf('<area shape="circle" coords="%d,%d,12" href="#">',
+                        $marker_x, $marker_y);
+    }
+    
+    /**
     * Set the coordinate of current marker object.
     *
     * @param    object $location Google_Maps_Coordinate|Point 

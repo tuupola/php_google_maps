@@ -15,11 +15,11 @@
  *
  */
  
-require_once 'Google/Maps/Overload.php';
+require_once 'Google/Maps/Location.php';
 require_once 'Google/Maps/Mercator.php';
 require_once 'Google/Maps/Point.php';
 
-class Google_Maps_Coordinate extends Google_Maps_Overload {
+class Google_Maps_Coordinate extends Google_Maps_Location {
 
     protected $lat;
     protected $lon;

@@ -68,17 +68,19 @@ class Google_Maps_Static extends Google_Maps_Overload {
     * Set center of the map. Converts lat,lon string to Google_Maps_Coordinate
     * when needed.
     *
-    * @param    mixed lat,lon string or Google_Maps_Coordinate
+    * @param    mixed lat,lon string, Google_Maps_Coordinate or Google_Maps_Point
     */
+
     public function setCenter($location) {
-        if ('Google_Maps_Coordinate' != get_class($this->center)) {
-            list($lat, $lon) = explode(',', $location);
-            $this->center = new Google_Maps_Coordinate($lat, $lon);
+        if ($location instanceof Google_Maps_Location) {
+            $this->center = $location->toCoordinate();
         } else {
-            $this->center = $location;
+            list($lat, $lon) = explode(',', $location);
+            $lat = trim($lat);
+            $lon = trim($lon);
+            $this->center = new Google_Maps_Coordinate($lat, $lon);
         }
     }
-
     /**
     * Return calculated center of the map.
     *
@@ -385,7 +387,7 @@ class Google_Maps_Static extends Google_Maps_Overload {
     * @return   string Static map image URL.
     */
     public function toImgTag() {
-        return sprintf('<img src="%s" width="%d" height="%d" alt="" />',
+        return sprintf('<img src="%s" width="%d" height="%d" alt="" usemap="#marker_map"/>',
                         $this->toUrl(), $this->getWidth(), $this->getHeight());
     }
     
@@ -397,13 +399,19 @@ class Google_Maps_Static extends Google_Maps_Overload {
     public function toHtml() {
         $retval  = sprintf('<div id="map" style="width:%dpx; height:%dpx">', 
                            $this->getWidth(), $this->getHeight());
-        $retval .= $this->toImgTag();
-        $retval .= '<div id="controls">';
-        foreach ($this->getControls() as $control) {
-            $retval .= $control->toHtml($this);
+        $retval .= "\n";
+        $retval .= '<map name="marker_map" id="marker_map">' . "\n";
+        foreach ($this->getMarkers() as $marker) {
+            $retval .= $marker->toArea($this) . "\n";
         }
-        $retval .= '</div>';
-        $retval .= '</div>';
+        $retval .= '</map>' . "\n";
+        $retval .= $this->toImgTag();
+        $retval .= '<div id="controls">' . "\n";
+        foreach ($this->getControls() as $control) {
+            $retval .= $control->toHtml($this) . "\n";
+        }
+        $retval .= '</div>' . "\n";
+        $retval .= '</div>' . "\n";
 
 
         return $retval;
