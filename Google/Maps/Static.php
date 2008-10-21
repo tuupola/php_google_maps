@@ -387,11 +387,21 @@ class Google_Maps_Static extends Google_Maps_Overload {
     * 
     * @return   string Static map image URL querystring.
     */
+    /*
+        TODO $include_all here is freaking unelegant
+    */
     public function toQueryString($include_all = false) {        
         $url['center'] = $this->getCenter()->__toString();
+
+        foreach ($this->getMarkers() as $marker) {
+            if ($marker->getInfowindow()->isVisible()) {
+                $url['infowindow'] = $marker->getId();
+            }
+        }
+
+        $url['zoom']   = $this->getZoom();
         
         if ($include_all) {
-            $url['zoom'] = $this->getZoom();
             $url['markers'] = $this->getMarkers('string');
             $url['path'] = $this->getPath('string');
             $url['size'] = $this->getSize();
@@ -439,10 +449,12 @@ class Google_Maps_Static extends Google_Maps_Overload {
         foreach ($this->getControls() as $control) {
             $retval .= $control->toHtml($this) . "\n";
         }
+        foreach ($this->getMarkers() as $marker) {
+            $retval .= $marker->getInfowindow()->toHtml($this, $marker) . "\n";
+        }
         $retval .= '</div>' . "\n";
         $retval .= '</div>' . "\n";
-
-
+        
         return $retval;
     }
     

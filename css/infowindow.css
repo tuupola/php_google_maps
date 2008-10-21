@@ -1,0 +1,141 @@
+/* Stylesheet for Google Map infowindow. Generated with FireBug. */
+
+div.bubble-top-right,
+div.bubble-top-left,
+div.bubble-pointer,
+div.bubble-bottom-left,
+div.bubble-bottom-right,
+div.bubble-border-top,
+div.bubble-border-bottom,
+div.bubble-border-left-right,
+div.bubble-content {
+  overflow: hidden; 
+  width: 25px; 
+  height: 25px; 
+  z-index: 1; 
+  position: absolute;     
+}
+
+img.bubble-close,
+img.bubble-top-right,
+img.bubble-top-left,
+img.bubble-pointer,
+img.bubble-bottom-left,
+img.bubble-bottom-right,
+img.bubble-border-top,
+img.bubble-border-bottom,
+img.bubble-border-left-right {
+  border: 0px none !important;
+  margin: 0px !important;
+  padding: 0px !important;
+  position: absolute !important;
+  width: 690px; 
+  height: 786px;
+}
+
+div.bubble-top-right {
+  left: 378px; 
+  top: 0px;
+}
+
+img.bubble-top-right { 
+  position: absolute;
+  left: -665px;
+  top: 0px; 
+}
+
+div.bubble-top-left {
+  left: 0px; 
+  top: 0px;
+}
+
+img.bubble-top-left {
+  left: 0px; 
+  top: 0px; 
+}
+
+div.bubble-pointer {
+  width: 98px; 
+  height: 96px; 
+  left: 153px; 
+  top: 98px;
+  z-index: 2;
+}
+
+img.bubble-pointer {
+  left: 0px; 
+  top: -690px; 
+}
+
+div.bubble-bottom-left {
+  left: 0px; 
+  top: 98px;
+}
+
+img.bubble-bottom-left {
+  left: 0px; 
+  top: -665px; 
+}
+
+div.bubble-bottom-right {
+  left: 378px; 
+  top: 98px;
+}
+
+img.bubble-bottom-right {
+  left: -665px; 
+  top: -665px; 
+}
+
+div.bubble-border-top {
+  border-top: 1px solid rgb(171, 171, 171); 
+  left: 25px; 
+  top: 0px; 
+  width: 353px; 
+  height: 24px; 
+  background-color: white;
+}
+
+div.bubble-border-bottom {
+  border-bottom: 1px solid rgb(171, 171, 171); 
+  left: 25px; 
+  top: 98px; 
+  width: 353px; 
+  height: 24px; 
+  background-color: white;
+}
+
+div.bubble-border-left-right {
+  border-left: 1px solid rgb(171, 171, 171); 
+  border-right: 1px solid rgb(171, 171, 171); 
+  left: 0px; top: 25px; 
+  width: 401px; 
+  height: 73px; 
+  background-color: white;
+}
+
+div.bubble-content {
+  overflow: auto; 
+  left: 16px; 
+  top: 16px; 
+  width: 371px; 
+  height: 91px; 
+  z-index: 10;  
+}
+
+div.bubble-content img {
+  margin-right: 10px !important;
+}
+
+img.bubble-close {
+  border: 0px none; 
+  margin: 0px; 
+  padding: 0px; 
+  position: absolute; 
+  left: 379px; 
+  top: 11px; 
+  width: 12px; 
+  height: 12px; 
+  cursor: pointer; 
+  z-index: 10000;
+}

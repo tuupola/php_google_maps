@@ -21,6 +21,7 @@ require_once 'Google/Maps/Point.php';
 require_once 'Google/Maps/Marker.php';
 require_once 'Google/Maps/Path.php';
 require_once 'Google/Maps/Control.php';
+require_once 'Google/Maps/Infowindow.php';
 
 class Google_Maps extends Google_Maps_Overload {
         

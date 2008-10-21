@@ -17,12 +17,17 @@
  
 require_once 'Google/Maps/Coordinate.php';
  
-class Google_Maps_Marker extends Google_Maps_Overload {
+class Google_Maps_Marker extends Google_Maps_Location {
     
     protected $coordinate;
     protected $color;
     protected $size;
     protected $character;
+    protected $infowindow;
+    
+    protected $visible = false;
+    protected $id;
+    static public $counter = 1;
     
     /**
     * Class constructor.
@@ -34,6 +39,7 @@ class Google_Maps_Marker extends Google_Maps_Overload {
     public function __construct($location, $params = array()) {
         $this->setCoordinate($location);
         $this->setProperties($params);
+        $this->setId('marker_' . self::$counter++);
     }
     
     /**
@@ -41,25 +47,16 @@ class Google_Maps_Marker extends Google_Maps_Overload {
     *
     * @return   string
     */
-    public function toArea(Google_Maps_Static $map) {
-        $zoom     = $map->getZoom();
-        $target_x = $this->toPoint()->getX();
-        $target_y = $this->toPoint()->getY();
-        $center_x = $map->getCenter()->toPoint()->getX();
-        $center_y = $map->getCenter()->toPoint()->getY();
+    public function toArea(Google_Maps_Static $map) {        
+        $marker_x  = $this->getContainerX($map);
+        $marker_y  = $this->getContainerY($map) - 20;
+        $marker_id = $this->getId();
         
-        $delta_x  = ($target_x - $center_x) >> (21 - $zoom);
-        $delta_y  = ($target_y - $center_y) >> (21 - $zoom);
+        $string = 'infowindow=' . $marker_id . '&';
+        $url = preg_replace('/infowindow=.*&/', $string, $map->toQueryString());
         
-        
-        $center_offset_x = round($map->getWidth() / 2);
-        $center_offset_y = round($map->getHeight() / 2);
-        
-        $marker_x = $center_offset_x + $delta_x;
-        $marker_y = $center_offset_y + $delta_y - 20;
-        
-        return sprintf('<area shape="circle" coords="%d,%d,12" href="#">',
-                        $marker_x, $marker_y);
+        return sprintf('<area shape="circle" coords="%d,%d,12" href="?%s" name="%s">',
+                        $marker_x, $marker_y, $url, $marker_id);
     }
     
     /**
@@ -106,7 +103,7 @@ class Google_Maps_Marker extends Google_Maps_Overload {
     public function getLon() {
         return $this->getCoordinate()->getLon();
     }
-    
+            
     public function __toString() {
         $retval = $this->getLat() . ',' . $this->getLon() . ','. $this->getColor() . $this->getSize() . $this->getCharacter();
         return preg_replace('/,$/', '', $retval);

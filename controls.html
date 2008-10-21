@@ -18,11 +18,24 @@ $coord_2  = new Google_Maps_Coordinate('58.379646', '26.764090');
 $marker_1 = new Google_Maps_Marker($coord_1);
 $marker_2 = new Google_Maps_Marker($coord_2);
 
+$bubble_1 = new Google_Maps_Infowindow('Foo Bar');
+$bubble_2 = new Google_Maps_Infowindow('Pler pop');
+
+$marker_1->setInfowindow($bubble_1);
+$marker_2->setInfowindow($bubble_2);
+
+//$bubble_1->show();
+//$marker_2->getInfowindow()->show();
+
 $map->addMarker($marker_1);
 $map->addMarker($marker_2);
 $map->setZoom(13);
 
 $map->setProperties($_GET);
+
+if ($_GET['infowindow']) {
+    $$_GET['infowindow']->getInfowindow()->show();
+}
 
 //print $map->toQueryString();
 
@@ -36,6 +49,7 @@ $map->setProperties($_GET);
   <link href="http://www.appelsiini.net/stylesheets/screen.css" rel="stylesheet" type="text/css" />
   <link href="http://www.appelsiini.net/stylesheets/main.css" rel="stylesheet" type="text/css" />
   <link href="css/controls.css" rel="stylesheet" type="text/css" />
+  <link href="css/infowindow.css" rel="stylesheet" type="text/css" />
   <link rel="alternate" type="application/atom+xml" href="http://feeds.feedburner.com/tuupola" title="Atom feed" />
 </head>
 <body>
@@ -72,7 +86,8 @@ $map->setProperties($_GET);
 		<h4>This page demonstrates how to add zoom and pan controls to static map.</h4>
 	</div>
 	<div class="entrybody">
-    <?php print $map->toHtml(); ?><br /><br />
+    <?php print $map->toHtml(); ?>
+    <br /><br />
 	  <p>
 	    Start by creating static map with <i>Google_Maps::create('static')</i> factory method. 
 	    Create controls using <i>Google_Maps_Control::create('type')</i>. Created control can 
@@ -122,12 +137,16 @@ $map->addControl($pan);</pre>
 
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.2.6/jquery.min.js" type="text/javascript" charset="utf-8"></script>
 <script type="text/javascript" charset="utf-8">
+  /*
   $(function() {
       $('map area').bind('click', function() {
-          alert('You clicked on marker.');
+          $('.bubble').hide();
+          var id = '#' + $(this).attr('name');
+          $(id).show();
           return false;
       });
   });
+  */
 </script>      
 
 <script src="/mint/?js" type="text/javascript"></script>
