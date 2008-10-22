@@ -14,7 +14,7 @@ $pan = Google_Maps_Control::create('pan');
 $map->addControl($pan);
 
 $coord_1 = new Google_Maps_Coordinate('58.378700', '26.731110');
-$coord_2  = new Google_Maps_Coordinate('58.379646', '26.764090');
+$coord_2 = new Google_Maps_Coordinate('58.379646', '26.764090');
 
 $marker_1 = new Google_Maps_Marker($coord_1);
 $marker_2 = new Google_Maps_Marker($coord_2);
@@ -25,22 +25,14 @@ $bubble_2 = new Google_Maps_Infowindow('Pler pop');
 $bubble_1->setMarker($marker_1);
 $bubble_2->setMarker($marker_2);
 
-//$marker_1->setInfowindow($bubble_1);
-//$marker_2->setInfowindow($bubble_2);
-
-//$bubble_1->show();
-//$bubble_2->show();
-
 $map->addInfowindow($bubble_1);
 $map->addInfowindow($bubble_2);
 $map->addMarker($marker_1);
 $map->addMarker($marker_2);
 
 $map->setZoom(13);
-
 $map->setProperties($_GET);
 
-//print $map->toQueryString();
 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -48,7 +40,7 @@ $map->setProperties($_GET);
 
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-  <title>Google Maps PHP Class - Static Map Control Demo</title>
+  <title>Static Map Controls and Infowindow Demo</title>
   <link href="http://www.appelsiini.net/stylesheets/screen.css" rel="stylesheet" type="text/css" />
   <link href="http://www.appelsiini.net/stylesheets/main.css" rel="stylesheet" type="text/css" />
   <link href="css/controls.css" rel="stylesheet" type="text/css" />
@@ -85,7 +77,7 @@ $map->setProperties($_GET);
 <div class="entry">
 
 	<div class="entrytitle">
-		<h2>Add Controls to Static Map</h2> 
+		<h2>Add Controls and Infowindow to Static Map</h2> 
 		<h4>There is no JavaScript in this page (except Google Analytics)</h4>
 	</div>
 	<div class="entrybody">
@@ -109,6 +101,43 @@ $zoom = Google_Maps_Control::create('zoom');
 $map->addControl($zoom);
 $pan = Google_Maps_Control::create('pan');
 $map->addControl($pan);</pre>
+
+<p>
+  Next create two coordinates and two markers at those coordinates.
+</p>
+
+<pre>$coord_1 = new Google_Maps_Coordinate('58.378700', '26.731110');
+$coord_2 = new Google_Maps_Coordinate('58.379646', '26.764090');
+
+$marker_1 = new Google_Maps_Marker($coord_1);
+$marker_2 = new Google_Maps_Marker($coord_2);</pre>
+
+<p>
+  Infowindows are hidden by default. You must attach marker to them.
+  Infowindow will be opened by clicking a marker.
+</p>
+
+<pre>$bubble_1 = new Google_Maps_Infowindow('Foo Bar');
+$bubble_2 = new Google_Maps_Infowindow('Pler pop');  
+
+$bubble_1->setMarker($marker_1);
+$bubble_2->setMarker($marker_2);</pre>
+
+<p>
+  Last but not least attach all created objects to the map itself...
+</p>
+
+<pre>$map->addInfowindow($bubble_1);
+$map->addInfowindow($bubble_2);
+$map->addMarker($marker_1);
+$map->addMarker($marker_2);</pre>
+
+<p>
+  ... and set default zoom and the override everything from query string.
+</p>
+
+<pre>$map->setZoom(13);
+$map->setProperties($_GET);</pre>
     </p>
     
 	  <h3>Where's the Source?</h3>
