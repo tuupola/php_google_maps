@@ -58,15 +58,6 @@ class Google_Maps_Marker extends Google_Maps_Location {
         return sprintf('<area shape="circle" coords="%d,%d,12" href="?%s" name="%s">',
                         $marker_x, $marker_y, $url, $marker_id);
     }
-    
-    /**
-    * Set the coordinate of current marker object.
-    *
-    * @param    object $location Google_Maps_Coordinate|Point 
-    */
-    public function setCoordinate($location) {
-        $this->coordinate = $location->toCoordinate();
-    }
 
     /**
     * Return marker as coordinate in Google Maps.

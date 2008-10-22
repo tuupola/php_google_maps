@@ -26,6 +26,7 @@ class Google_Maps_Static extends Google_Maps_Overload {
     protected $format;
     protected $maptype;
     protected $markers = array();
+    protected $infowindows = array();
     protected $path;
     protected $span;
     protected $frame;
@@ -103,6 +104,8 @@ class Google_Maps_Static extends Google_Maps_Overload {
     * Set and return zoom of the map so all markers fit to screen. Takes map 
     * center into account when it is set. 
     *
+    * TODO zoomToFit() does not respect maz and min zoom.
+    *
     * @return   integer New zoom level.
     */
     public function zoomToFit() {
@@ -124,6 +127,23 @@ class Google_Maps_Static extends Google_Maps_Overload {
         
         return $zoom;
     }
+    
+    /**
+    * Set visible infowindow. Data usually passed from querystring.
+    *
+    * @param    string  id of infowindow
+    * @return   integer number of visible infowindows in map.
+    */
+    public function setInfowindow($id = '') {
+        foreach ($this->getInfowindows() as $infowindow) {
+            if ($infowindow->getMarker()->getId() == $id) {
+                $infowindow->show();
+            }
+        }
+        /* TODO Hardcoded because there can be only one infowindow open ATM. */
+        return 1;
+    }
+    
     
     /**
     * Return smallest possible bounds where all markers fit in.
@@ -298,7 +318,7 @@ class Google_Maps_Static extends Google_Maps_Overload {
     }
     
     /**
-    * Remove controls from map.
+    * Remove control from map.
     * 
     * @param    object Google_Maps_Control
     * @return   integer Total number of controls in map.
@@ -306,6 +326,27 @@ class Google_Maps_Static extends Google_Maps_Overload {
     public function removeControl() {
         
     }   
+    
+    /**
+    * Add infowindow to map. 
+    * 
+    * @param    object Google_Maps_Infowindow
+    * @return   integer Total number of infowindows in map.
+    */
+    public function addInfowindow($infowindow) {
+        $this->infowindows[] = $infowindow;
+        return count($this->getInfowindows());
+    }
+    
+    /**
+    * Remove infowindow from map.
+    * 
+    * @param    object Google_Maps_Infowindow
+    * @return   integer Total number of infowindows in map.
+    */
+    public function removeInfowindow() {
+        
+    }
     
     /**
     * Zoom out one level
@@ -393,9 +434,10 @@ class Google_Maps_Static extends Google_Maps_Overload {
     public function toQueryString($include_all = false) {        
         $url['center'] = $this->getCenter()->__toString();
 
-        foreach ($this->getMarkers() as $marker) {
-            if ($marker->getInfowindow()->isVisible()) {
-                $url['infowindow'] = $marker->getId();
+        $url['infowindow'] = '';
+        foreach ($this->getInfowindows() as $infowindow) {
+            if ($infowindow->isVisible()) {
+                $url['infowindow'] = $infowindow->getMarker()->getId();
             }
         }
 
@@ -449,9 +491,11 @@ class Google_Maps_Static extends Google_Maps_Overload {
         foreach ($this->getControls() as $control) {
             $retval .= $control->toHtml($this) . "\n";
         }
-        foreach ($this->getMarkers() as $marker) {
-            $retval .= $marker->getInfowindow()->toHtml($this, $marker) . "\n";
+
+        foreach ($this->getInfowindows() as $infowindow) {
+            $retval .= $infowindow->toHtml($this) . "\n";
         }
+
         $retval .= '</div>' . "\n";
         $retval .= '</div>' . "\n";
         

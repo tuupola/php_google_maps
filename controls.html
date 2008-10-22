@@ -15,27 +15,30 @@ $map->addControl($pan);
 
 $coord_1 = new Google_Maps_Coordinate('58.378700', '26.731110');
 $coord_2  = new Google_Maps_Coordinate('58.379646', '26.764090');
+
 $marker_1 = new Google_Maps_Marker($coord_1);
 $marker_2 = new Google_Maps_Marker($coord_2);
 
 $bubble_1 = new Google_Maps_Infowindow('Foo Bar');
 $bubble_2 = new Google_Maps_Infowindow('Pler pop');
 
-$marker_1->setInfowindow($bubble_1);
-$marker_2->setInfowindow($bubble_2);
+$bubble_1->setMarker($marker_1);
+$bubble_2->setMarker($marker_2);
+
+//$marker_1->setInfowindow($bubble_1);
+//$marker_2->setInfowindow($bubble_2);
 
 //$bubble_1->show();
-//$marker_2->getInfowindow()->show();
+//$bubble_2->show();
 
+$map->addInfowindow($bubble_1);
+$map->addInfowindow($bubble_2);
 $map->addMarker($marker_1);
 $map->addMarker($marker_2);
+
 $map->setZoom(13);
 
 $map->setProperties($_GET);
-
-if ($_GET['infowindow']) {
-    $$_GET['infowindow']->getInfowindow()->show();
-}
 
 //print $map->toQueryString();
 
@@ -83,7 +86,7 @@ if ($_GET['infowindow']) {
 
 	<div class="entrytitle">
 		<h2>Add Controls to Static Map</h2> 
-		<h4>This page demonstrates how to add zoom and pan controls to static map.</h4>
+		<h4>There is no JavaScript in this page (except Google Analytics)</h4>
 	</div>
 	<div class="entrybody">
     <?php print $map->toHtml(); ?>
@@ -137,7 +140,7 @@ $map->addControl($pan);</pre>
 
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.2.6/jquery.min.js" type="text/javascript" charset="utf-8"></script>
 <script type="text/javascript" charset="utf-8">
-  /*
+/*
   $(function() {
       $('map area').bind('click', function() {
           $('.bubble').hide();
@@ -146,7 +149,7 @@ $map->addControl($pan);</pre>
           return false;
       });
   });
-  */
+*/
 </script>      
 
 <script src="/mint/?js" type="text/javascript"></script>

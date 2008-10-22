@@ -19,7 +19,7 @@ require_once 'Google/Maps/Coordinate.php';
  
 class Google_Maps_Infowindow extends Google_Maps_Overload {
     
-    protected $coordinate;
+    protected $marker;
     protected $content;
     protected $display = 'none';
     protected $template = '
@@ -92,11 +92,9 @@ class Google_Maps_Infowindow extends Google_Maps_Overload {
         return $this->getDisplay() == 'block' ? true : false;
     }
         
-    /*
-        TODO Consider switching back to Google_Maps_Location because of getId()
-    */
-    public function toHtml(Google_Maps_Static $map, Google_Maps_Location $location) {
+    public function toHtml(Google_Maps_Static $map) {
         $template = $this->getTemplate();
+        $location = $this->getMarker();
         return sprintf($template, $location->getId(),
                                   $location->getContainerX($map) - 160, 
                                   $location->getContainerY($map) - 235, 
