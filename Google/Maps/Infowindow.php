@@ -44,7 +44,7 @@ class Google_Maps_Infowindow extends Google_Maps_Overload {
   <div class="bubble-border-left-right"></div>
   <div class="bubble-border-bottom"></div>
   <p class="bubble-close">
-    <img class="bubble-close" src="http://maps.google.com/intl/en_ALL/mapfiles/iw_close.gif" />
+    <a href="%s"><img class="bubble-close" src="http://maps.google.com/intl/en_ALL/mapfiles/iw_close.gif" /></a>
   </p>
   <div class="bubble-content">
     %s
@@ -91,7 +91,11 @@ class Google_Maps_Infowindow extends Google_Maps_Overload {
     public function isVisible() {
         return $this->getDisplay() == 'block' ? true : false;
     }
-        
+    
+    public function getCloseUrl(Google_Maps_Static $map) {
+        return preg_replace('/infowindow=.*&/', 'infowindow=&', $map->toUrl('?', false));
+    }
+    
     public function toHtml(Google_Maps_Static $map) {
         $template = $this->getTemplate();
         $location = $this->getMarker();
@@ -99,9 +103,10 @@ class Google_Maps_Infowindow extends Google_Maps_Overload {
                                   $location->getContainerX($map) - 160, 
                                   $location->getContainerY($map) - 235, 
                                   $this->getDisplay(),
+                                  $this->getCloseUrl($map),
                                   $this->getContent());
     }
-    
+        
     public function __toString() {
     }
         

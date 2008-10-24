@@ -458,8 +458,8 @@ class Google_Maps_Static extends Google_Maps_Overload {
     * 
     * @return   string Static map image URL.
     */
-    public function toUrl() {                
-        return 'http://maps.google.com/staticmap?' . $this->toQueryString(true);
+    public function toUrl($prefix='http://maps.google.com/staticmap?', $full=true) {
+        return $prefix . $this->toQueryString($full);
     }
         
     /**
