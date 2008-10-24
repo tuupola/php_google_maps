@@ -90,7 +90,7 @@ $map->setProperties($_GET);
 
 $map = Google_Maps::create('static');
 
-$map->setKey(trim(file_get_contents('api_key.txt')));
+$map->setKey(API_KEY);
 $map->setSize('540x300');
 
 $coord_1 = new Google_Maps_Coordinate('58.378700', '26.731110');
