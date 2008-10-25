@@ -278,6 +278,27 @@ class Google_Maps_Static extends Google_Maps_Overload {
 
         return count($this->getMarkers());
     }
+    
+    /**
+    * Return infowindows of current map as array. If bounds is give return 
+    * only infowindows which are inside bounds.
+    *
+    * @param    mixed $bounds false or Google_Maps_Bounds
+    * @return   mixed Array or string.
+    */
+    public function getInfowindows($bounds=false) {
+        $infowindows = array();
+        if ($bounds) {
+            foreach ($this->infowindows as $infowindow) {
+                if ($bounds->contains($infowindow->getMarker())) {
+                    $infowindows[] = $infowindow;
+                }
+            }
+        } else {
+            $infowindows = $this->infowindows;
+        }
+        return $infowindows;
+    }
 
     /**
     * Return path of current map in either array or as a string
@@ -495,7 +516,8 @@ class Google_Maps_Static extends Google_Maps_Overload {
                            $this->getWidth(), $this->getHeight());
         $retval .= "\n";
         $retval .= '<map name="marker_map" id="marker_map">' . "\n";
-        foreach ($this->getMarkers() as $marker) {
+        /* Include only markers inside map bounds to keep HTML size smaller. */
+        foreach ($this->getMarkers('array', $this->getBounds()) as $marker) {
             $retval .= $marker->toArea($this) . "\n";
         }
         $retval .= '</map>' . "\n";
@@ -505,7 +527,8 @@ class Google_Maps_Static extends Google_Maps_Overload {
             $retval .= $control->toHtml($this) . "\n";
         }
 
-        foreach ($this->getInfowindows() as $infowindow) {
+        /* Include only infowindows inside map bounds to keep HTML size smaller. */
+        foreach ($this->getInfowindows($this->getBounds()) as $infowindow) {
             $retval .= $infowindow->toHtml($this) . "\n";
         }
 
