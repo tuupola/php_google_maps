@@ -218,22 +218,35 @@ class Google_Maps_Static extends Google_Maps_Overload {
     
     /**
     * Return markers of current map in either array or as a string
-    * which can be used in image URL.
+    * which can be used in image URL. If bounds is give return only markers
+    * which are inside bounds.
     *
     * @param    string $type Either 'array' of 'string'.
+    * @param    mixed $bounds false or Google_Maps_Bounds
     * @return   mixed Array or string.
     */
-    public function getMarkers($type = 'array') {
-        $retval = $this->markers;
+    public function getMarkers($type = 'array', $bounds=false) {
+        $markers = array();
+        if ($bounds) {
+            foreach ($this->markers as $marker) {
+                if ($bounds->contains($marker)) {
+                    $markers[] = $marker;
+                }
+            }
+        } else {
+            $markers = $this->markers;
+        }
         if ('string' == $type) {
             $retval = '';
-            if (is_array($this->markers)) {
-                foreach ($this->markers as $marker) {
+            if (is_array($markers)) {
+                foreach ($markers as $marker) {
                     $retval .= $marker;
-                    $retval .= '|';
+                    $retval .= '|';                        
                 }                
                 $retval = preg_replace('/\|$/', '', $retval);
             }
+        } else {
+            $retval = $markers;
         }
         return $retval;
     }
@@ -444,7 +457,7 @@ class Google_Maps_Static extends Google_Maps_Overload {
         $url['zoom']   = $this->getZoom();
         
         if ($include_all) {
-            $url['markers'] = $this->getMarkers('string');
+            $url['markers'] = $this->getMarkers('string', $this->getBounds());
             $url['path'] = $this->getPath('string');
             $url['size'] = $this->getSize();
             $url['key'] = $this->getKey();            
