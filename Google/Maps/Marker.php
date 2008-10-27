@@ -96,7 +96,7 @@ class Google_Maps_Marker extends Google_Maps_Location {
     }
             
     public function __toString() {
-        $retval = $this->getLat() . ',' . $this->getLon() . ','. $this->getColor() . $this->getSize() . $this->getCharacter();
+        $retval = $this->getLat() . ',' . $this->getLon() . ','. $this->getSize() . $this->getColor() . $this->getCharacter();
         return preg_replace('/,$/', '', $retval);
     }
         
