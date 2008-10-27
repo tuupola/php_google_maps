@@ -19,6 +19,7 @@ require_once 'Google/Maps/Overload.php';
 require_once 'Google/Maps/Coordinate.php';
 require_once 'Google/Maps/Point.php';
 require_once 'Google/Maps/Marker.php';
+require_once 'Google/Maps/Cluster.php';
 require_once 'Google/Maps/Path.php';
 require_once 'Google/Maps/Control.php';
 require_once 'Google/Maps/Infowindow.php';

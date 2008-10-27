@@ -27,7 +27,7 @@ class Google_Maps_Marker extends Google_Maps_Location {
     
     protected $visible = false;
     protected $id;
-    static public $counter = 1;
+    static private $counter = 1;
     
     /**
     * Class constructor.
