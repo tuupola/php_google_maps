@@ -94,6 +94,19 @@ class Google_Maps_Marker extends Google_Maps_Location {
     public function getLon() {
         return $this->getCoordinate()->getLon();
     }
+    
+    /**
+    * Return color of marker.
+    *
+    * @return   string color
+    */
+    public function getColor() {
+        $retval = $this->color;
+        if ($this->getCharacter() && !trim($retval)) {
+            $retval = 'red';
+        }
+        return $retval;
+    }
             
     public function __toString() {
         $retval = $this->getLat() . ',' . $this->getLon() . ','. $this->getSize() . $this->getColor() . $this->getCharacter();
