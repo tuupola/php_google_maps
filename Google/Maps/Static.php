@@ -82,6 +82,7 @@ class Google_Maps_Static extends Google_Maps_Overload {
             $this->center = new Google_Maps_Coordinate($lat, $lon);
         }
     }
+    
     /**
     * Return calculated center of the map.
     *
@@ -336,8 +337,15 @@ class Google_Maps_Static extends Google_Maps_Overload {
     * @param    object Google_Maps_Marker
     * @return   integer Total number of markers in map.
     */
-    public function removeMarker() {
-        
+    public function removeMarker($marker) {
+        $markers = array();
+        foreach ($this->getMarkers() as $target) {
+            if ($marker != $target) {
+                $markers[] = $target;
+            }
+        }
+        $this->setMarkers($markers);
+        return count($markers);
     }
 
     /**
