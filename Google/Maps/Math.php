@@ -11,9 +11,6 @@
  * Project home:
  *   http://www.appelsiini.net/projects/google_maps
  *
- * Based on adjust.js by Bratliff:
- *   http://www.polyarc.us/adjust.js
- *
  * Revision: $Id$
  *
  */
