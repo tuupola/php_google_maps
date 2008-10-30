@@ -17,6 +17,8 @@ foreach ($xml->Document->Placemark as $placemark) {
     list($longitude, $latitude, $elevation) = explode(',', $placemark->Point->coordinates, 3);
     $coordinate = new Google_Maps_Coordinate($latitude, $longitude);
     $marker = new Google_Maps_Marker($coordinate);
+    $marker->setSize('small');
+    $marker->setColor('blue');
     $bubble = new Google_Maps_Infowindow($placemark->description);
     $bubble->setMarker($marker);
     $map->addMarker($marker);
@@ -26,6 +28,11 @@ foreach ($xml->Document->Placemark as $placemark) {
 $map->zoomToFit();
 
 $map->setProperties($_GET);
+
+$clusterer = Google_Maps_Clusterer::create('distance');
+$map->setClusterer($clusterer);
+
+//print_r($map->getClusteredMarkers('array', $map->getBounds()));
 
 /*
 print strlen($map->toUrl());

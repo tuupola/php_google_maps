@@ -1,7 +1,6 @@
 <?php
-
 /*
- * Google_Maps
+ * Google_Maps_Clusterer_Distance
  *
  * Copyright (c) 2008 Mika Tuupola
  *
@@ -16,19 +15,11 @@
  */
  
 require_once 'Google/Maps/Overload.php';
-require_once 'Google/Maps/Coordinate.php';
-require_once 'Google/Maps/Point.php';
-require_once 'Google/Maps/Marker.php';
-require_once 'Google/Maps/Marker/Cluster.php';
-require_once 'Google/Maps/Clusterer.php';
-require_once 'Google/Maps/Path.php';
-require_once 'Google/Maps/Control.php';
-require_once 'Google/Maps/Infowindow.php';
 
-class Google_Maps extends Google_Maps_Overload {
+class Google_Maps_Clusterer {
         
     public function create($type, $params = array()) {
-        $class_name = 'Google_Maps_' . ucfirst($type);
+        $class_name = 'Google_Maps_Clusterer_' . ucfirst($type);
         $file_name  = str_replace('_', DIRECTORY_SEPARATOR, $class_name).'.php';
         require_once $file_name;
         return new $class_name($params);

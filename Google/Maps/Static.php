@@ -35,6 +35,8 @@ class Google_Maps_Static extends Google_Maps_Overload {
     protected $controls = array();
     protected $min_zoom = 1;
     protected $max_zoom = 21;
+    protected $clusterer = false;
+    
     
     /**
     * Class constructor.
@@ -44,6 +46,11 @@ class Google_Maps_Static extends Google_Maps_Overload {
     */
     public function __construct($params) {
         $this->setProperties($params);
+        /*
+        if (false === $this->getClusterer()) {
+            $this->setClusterer(Google_Maps_Clusterer::create('none'));
+        }
+        */
     }
 
     /**
@@ -281,6 +288,35 @@ class Google_Maps_Static extends Google_Maps_Overload {
     }
     
     /**
+    * Return clustered markers of current map in either array or as a string
+    * which can be used in image URL. If bounds is give return only markers
+    * which are inside bounds.
+    *
+    * @param    string $type Either 'array' of 'string'.
+    * @param    mixed $bounds false or Google_Maps_Bounds
+    * @return   mixed Array or string.
+    */
+    public function getClusteredMarkers($type = 'array', $bounds=false) {
+        $markers = $this->getMarkers('array', $bounds);
+        $markers = $this->getClusterer()->process($markers, $this);
+
+        if ('string' == $type) {
+            $retval = '';
+            if (is_array($markers)) {
+                foreach ($markers as $marker) {
+                    $retval .= $marker;
+                    $retval .= '|';                        
+                }                
+                $retval = preg_replace('/\|$/', '', $retval);
+            }
+        } else {
+            $retval = $markers;
+        }
+        return $retval;
+    }
+    
+    
+    /**
     * Return infowindows of current map as array. If bounds is give return 
     * only infowindows which are inside bounds.
     *
@@ -486,7 +522,11 @@ class Google_Maps_Static extends Google_Maps_Overload {
         $url['zoom']   = $this->getZoom();
         
         if ($include_all) {
-            $url['markers'] = $this->getMarkers('string', $this->getBounds());
+            if ($this->getClusterer()) {
+                $url['markers'] = $this->getClusteredMarkers('string', $this->getBounds());
+            } else {
+                $url['markers'] = $this->getMarkers('string', $this->getBounds());                
+            }
             $url['path'] = $this->getPath('string');
             $url['size'] = $this->getSize();
             $url['key'] = $this->getKey();            

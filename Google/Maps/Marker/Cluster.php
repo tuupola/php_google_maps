@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Google_Maps_Cluster
+ * Google_Maps_Marker_Cluster
  *
  * Copyright (c) 2008 Mika Tuupola
  *
@@ -17,7 +17,7 @@
  
 require_once 'Google/Maps/Coordinate.php';
  
-class Google_Maps_Cluster extends Google_Maps_Marker {
+class Google_Maps_Marker_Cluster extends Google_Maps_Marker {
     
     protected $markers;
     
@@ -45,6 +45,34 @@ class Google_Maps_Cluster extends Google_Maps_Marker {
     */
     public function setMarkers($markers = array()) {
         $this->markers = $markers;
+        return count($markers);
+    }
+    
+    /**
+    * Add marker to cluster. 
+    * 
+    * @param    object Google_Maps_Marker
+    * @return   integer Total number of markers in map.
+    */
+    public function addMarker($marker) {
+        $this->markers[] = $marker;
+        return count($this->getMarkers());
+    }
+    
+    /**
+    * Remove marker from cluster.
+    * 
+    * @param    object Google_Maps_Marker
+    * @return   integer Total number of markers in map.
+    */
+    public function removeMarker($marker) {
+        $markers = array();
+        foreach ($this->getMarkers() as $target) {
+            if ($marker != $target) {
+                $markers[] = $target;
+            }
+        }
+        $this->setMarkers($markers);
         return count($markers);
     }
     
