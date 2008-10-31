@@ -3,7 +3,7 @@
 /*
  * Google_Maps_Math
  *
- * Copyright (c) 2008 Mika Tuupola, Bratliff
+ * Copyright (c) 2008 Mika Tuupola
  *
  * Licensed under the MIT license:
  *   http://www.opensource.org/licenses/mit-license.php
