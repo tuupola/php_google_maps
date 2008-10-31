@@ -133,17 +133,47 @@ class Google_Maps_Bounds extends Google_Maps_Overload {
     }
 
     /**
+      * Check if given coordinate, point or bounds is inside bounds
+      *
+      * @return boolean
+      */
+
+    public function contains($bounds_or_location) {
+        if ($bounds_or_location instanceof Google_Maps_Bounds) {
+            $retval = $this->containsBounds($bounds_or_location); 
+        } else {
+            $retval = $this->containsLocation($bounds_or_location);             
+        }
+        return $retval;
+    }
+
+    /**
       * Check if given coordinate or point is inside bounds
       *
       * @return boolean
       */
 
-    public function contains($location) {
+    public function containsLocation(Google_Maps_Location $location) {
         $retval     = false;
         $coordinate = $location->toCoordinate();
         if ($coordinate->getLon() < $this->getMaxLon() && $coordinate->getLon() > $this->getMinLon() &&
             $coordinate->getLat() < $this->getMaxLat() && $coordinate->getLat() > $this->getMinLat()) {
                 $retval = true;
+        }
+        return $retval;
+    }
+    
+    /**
+      * Check if given bounds is inside bounds
+      *
+      * @return boolean
+      */
+    
+    public function containsBounds(Google_Maps_Bounds $bounds) {
+        $retval = false;
+        if ($this->containsLocation($bounds->getNorthEast()) && 
+            $this->containsLocation($bounds->getSouthWest())) {
+              $retval = true;
         }
         return $retval;
     }

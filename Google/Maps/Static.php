@@ -36,6 +36,7 @@ class Google_Maps_Static extends Google_Maps_Overload {
     protected $min_zoom = 1;
     protected $max_zoom = 21;
     protected $clusterer = false;
+    protected $url_max_length = 2046; /* TODO: implement URL length protection. */
     
     
     /**
@@ -119,20 +120,13 @@ class Google_Maps_Static extends Google_Maps_Overload {
     public function zoomToFit() {
         $zoom    = 21;
         $found   = false;
+        $marker_bounds = $this->getMarkerBounds();
         while ($found == false) {
-            $this->setZoom($zoom);
-            $map_bounds = $this->getBounds();
-            $found = true;
-            foreach ($this->getMarkers() as $marker) {
-                if ($map_bounds->contains($marker)) {
-                } else {
-                    $found = false;
-                    break;
-                }
-            }
+            $map_bounds = $this->getBounds($zoom);
+            $found = $map_bounds->contains($marker_bounds);
             $zoom--;
         }
-        
+        $this->setZoom($zoom + 1);
         return $zoom;
     }
     
