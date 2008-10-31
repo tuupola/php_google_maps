@@ -19,8 +19,10 @@ require_once 'Google/Maps/Overload.php';
 
 class Google_Maps_Clusterer_Distance extends Google_Maps_Overload {
     
-    protected $distance = 20;
-    protected $unit     = 'pixel';
+    protected $distance     = 20;
+    protected $unit         = 'pixel';
+    protected $color        = 'blue';
+    protected $marker_sizes = array('mid','mid','mid','mid','mid','','','','');
     
     public function process(array $markers, Google_Maps_Static $map) {
         $clustered = array();
@@ -29,9 +31,9 @@ class Google_Maps_Clusterer_Distance extends Google_Maps_Overload {
         while (count($markers)) {
             $marker = array_pop($markers);
             $cluster = new Google_Maps_Marker_Cluster();
-            foreach ($markers as $key2 => $target) {
+            foreach ($markers as $key => $target) {
                 if (($distance > $marker->distanceTo($target, $unit, $map))) {
-                    unset($markers[$key2]);
+                    unset($markers[$key]);
                     $amount = $cluster->addMarker($target);
                     /* Marker can display max number 9, so break out of  */
                     /* the loop when we reach it. One is added outside of the loop. */
@@ -43,9 +45,11 @@ class Google_Maps_Clusterer_Distance extends Google_Maps_Overload {
             }
 
             if (count($cluster->getMarkers()) > 0) {
-                $cluster->addMarker($marker);
-                $cluster->setCharacter(count($cluster->getMarkers()));
+                $sizes = $this->getMarkerSizes();
+                $count = $cluster->addMarker($marker);
+                $cluster->setCharacter($count);
                 $cluster->setColor('blue');
+                $cluster->setSize($sizes[$count - 1]);
                 $clustered[] = $cluster;
             } else {
                 $clustered[] = $marker;
@@ -53,4 +57,5 @@ class Google_Maps_Clusterer_Distance extends Google_Maps_Overload {
         }
         return $clustered;
     }
+     
 }
