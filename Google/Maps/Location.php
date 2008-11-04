@@ -73,7 +73,7 @@ abstract class Google_Maps_Location extends Google_Maps_Overload {
             $y1 = $this->toPoint()->getY();
             $y2 = $location->toPoint()->getY();
             
-            $distance = (sqrt(pow(($x1-$x2),2) + pow(($y1-$y2),2)));
+            $distance = sqrt(pow(($x1-$x2),2) + pow(($y1-$y2),2));
 
             if ($map instanceof Google_Maps_Static) {
                 $distance = $distance >> (21 - $zoom);
