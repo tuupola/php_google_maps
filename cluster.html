@@ -1,0 +1,197 @@
+<?php
+
+require_once 'Benchmark/Timer.php';
+
+$timer = new Benchmark_Timer(true);
+$timer->start();
+
+require_once 'Google/Maps.php';
+$map = Google_Maps::create('static');
+
+$map->setKey(trim(file_get_contents('api_key.txt')));
+$map->setSize('540x300');
+
+$zoom = Google_Maps_Control::create('zoom');
+$map->addControl($zoom);
+$pan = Google_Maps_Control::create('pan');
+$map->addControl($pan);
+
+$timer->setMarker('Start loading KML');
+
+$xml = simplexml_load_file('cities.kml', null, LIBXML_NOCDATA);
+
+$timer->setMarker('KML loaded');
+
+foreach ($xml->Document->Placemark as $placemark) {
+    list($longitude, $latitude, $elevation) = explode(',', $placemark->Point->coordinates, 3);
+    $coordinate = new Google_Maps_Coordinate($latitude, $longitude);
+    $marker = new Google_Maps_Marker($coordinate);
+    $marker->setSize('small');
+    $marker->setColor('blue');
+    $bubble = new Google_Maps_Infowindow($placemark->description);
+    $bubble->setMarker($marker);
+    $map->addMarker($marker);
+    $map->addInfowindow($bubble);
+}
+
+$timer->setMarker('Markers created');
+
+$map->zoomToFit();
+
+$timer->setMarker('Zoom calculated');
+
+$map->setProperties($_GET);
+
+$clusterer = Google_Maps_Clusterer::create('distance');
+$map->setClusterer($clusterer);
+
+$map->getClusteredMarkers('string', $map->getBounds());
+
+$timer->setMarker('Clustered');
+
+$timer->stop();
+$timer->display();
+
+//print $map->toUrl();
+
+print strlen($map->toUrl());
+
+//die();
+?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <title>Static Map With KML Data Demo</title>
+  <link href="http://www.appelsiini.net/stylesheets/screen.css" rel="stylesheet" type="text/css" />
+  <link href="http://www.appelsiini.net/stylesheets/main.css" rel="stylesheet" type="text/css" />
+  <link href="css/controls.css" rel="stylesheet" type="text/css" />
+  <link href="css/infowindow.css" rel="stylesheet" type="text/css" />
+  <link rel="alternate" type="application/atom+xml" href="http://feeds.feedburner.com/tuupola" title="Atom feed" />
+</head>
+<body>
+  <div class="container"> 
+
+    <!-- header -->
+    <div id="header" class="span-20">
+      <div class="span-11">
+                
+        <h1>PHP Google Static Maps</h1><br />
+        <p>Programmatically Create Google Static Maps With PHP.</p>
+         
+      </div>
+      <div class="span-9 last">
+        <ul id="nav">        
+          <li id="first"><a href="http://www.appelsiini.net/">weblog</a></li>
+          <li><a href="http://www.appelsiini.net/projects" class="last">projects</a></li>
+          <!--
+          <li><a href="http://www.appelsiini.net/cv" class="last">cv</a></li>
+          -->
+        </ul>
+      </div>
+    </div>
+    <!-- /header -->
+
+    <!-- content -->
+    <div class="span-14" id="content">
+    
+  
+<div class="entry">
+
+	<div class="entrytitle">
+		<h2>KML Data With Static Maps</h2> 
+		<h4>There is no JavaScript in this page (except Google Analytics)</h4>
+	</div>
+    <p>
+    </p>
+	<div class="entrybody">
+    <?php print $map->toHtml(); ?>
+    <br /><br />
+	  <p>
+	    Markers and infowindow data comes from <a href="http://kaskoabi.ergoaitab.ee/ergo2.kml">KML</a>.
+	    Zooming and panning works. There is noJavaScript (except Google Analytics) used in this page. 
+	    Map is created using following code:
+	  </p>
+	  <p>
+      <pre>require_once 'Google/Maps.php';
+
+$map = Google_Maps::create('static');
+
+$map->setKey(API_KEY);
+$map->setSize('540x300');
+
+$zoom = Google_Maps_Control::create('zoom');
+$map->addControl($zoom);
+$pan = Google_Maps_Control::create('pan');
+$map->addControl($pan);
+
+$xml = simplexml_load_file('http://kaskoabi.ergoaitab.ee/ergo2.kml', 
+                            null, LIBXML_NOCDATA);
+
+foreach ($xml->Document->Placemark as $placemark) {
+    list($longitude, $latitude, $elevation) = 
+         explode(',', $placemark->Point->coordinates, 3);
+    $coordinate = new Google_Maps_Coordinate($latitude, $longitude);
+    $marker = new Google_Maps_Marker($coordinate);
+    $bubble = new Google_Maps_Infowindow($placemark->description);
+    $bubble->setMarker($marker);
+    $map->addMarker($marker);
+    $map->addInfowindow($bubble);
+}
+
+$map->zoomToFit();
+$map->setProperties($_GET);</pre>
+
+	  <h3>Where's the Source?</h3>
+    <p>
+      Code uses work in progress <a href="http://github.com/tuupola/php_google_maps/tree">Simple Static Maps PHP class</a>. 
+      It aims to make working with static maps jolly good. Code is still alpha quality. 
+      API might change any time. Use at your own risk.
+    </p>
+    <p>
+      If you like this you might also want to see <a href="http://www.appelsiini.net/2008/10/simple-zoom-and-pan-controls-with-static-maps">walkthrough</a> and <a href="http://www.appelsiini.net/2008/10/simple-static-maps-with-php">other features</a>.
+    </p>
+	  	  
+	</div>	
+</div>
+
+  <hr class="space" />
+
+    </div>
+    <!-- /content -->
+
+    <!-- sidebar -->
+    <div class="span-5 push-1 last" id="sidebar">
+      <br /><br />
+      <a href="http://twitter.com/tuupola"><img src="http://www.appelsiini.net/images/twitter3.png" alt="@tuupola" /></a>
+    </div>
+    <!-- /sidebar -->
+
+  </div>
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.2.6/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript" charset="utf-8">
+/*
+  $(function() {
+      $('map area').bind('click', function() {
+          $('.bubble').hide();
+          var id = '#' + $(this).attr('name');
+          $(id).show();
+          return false;
+      });
+  });
+*/
+</script>      
+
+<script src="/mint/?js" type="text/javascript"></script>
+<script src="http://www.google-analytics.com/urchin.js" type="text/javascript"></script>
+<script type="text/javascript">
+  _uacct = "UA-190966-1";
+  urchinTracker();
+</script>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.2.6/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+
+</body>
+</html>
+
