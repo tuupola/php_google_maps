@@ -24,7 +24,7 @@ class Google_Maps_Static extends Google_Maps_Overload {
     protected $zoom = 8;
     protected $size;
     protected $format;
-    protected $maptype;
+    protected $type;
     protected $markers = array();
     protected $infowindows = array();
     protected $path;
@@ -523,6 +523,7 @@ class Google_Maps_Static extends Google_Maps_Overload {
             }
             $url['path'] = $this->getPath('string');
             $url['size'] = $this->getSize();
+            $url['maptype'] = $this->getType();
             $url['key'] = $this->getKey();            
         }
         
