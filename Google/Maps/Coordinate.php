@@ -49,6 +49,14 @@ class Google_Maps_Coordinate extends Google_Maps_Location {
         return new Google_Maps_Point($x, $y);
     }
     
+    public function getLat($format='%01.2f') {
+        return sprintf($format, $this->lat);
+    }
+
+    public function getLon($format='%01.2f') {
+        return sprintf($format, $this->lon);
+    }
+    
     /**
     * Return coordinate as coordinate. This method exists only
     * provide unified API between coordinate and point objects.
