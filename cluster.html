@@ -1,6 +1,16 @@
 <?php
 
+require_once 'Cache/Lite.php';
 require_once 'Benchmark/Timer.php';
+
+$cache = new Cache_Lite();
+
+if ($data = $cache->get($_SERVER['REQUEST_URI'])) {
+    print $data;
+    die();
+}
+
+ob_start();
 
 $timer = new Benchmark_Timer(true);
 $timer->start();
@@ -50,11 +60,10 @@ $map->getClusteredMarkers('string', $map->getBounds());
 $timer->setMarker('Clustered');
 
 $timer->stop();
-$timer->display();
+//$timer->display();
 
 //print $map->toUrl();
 
-print strlen($map->toUrl());
 
 //die();
 ?>
@@ -194,4 +203,8 @@ $map->setProperties($_GET);</pre>
 
 </body>
 </html>
+<?php
+$data = ob_get_contents();
+$cache->save($data);
+?>
 

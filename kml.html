@@ -1,5 +1,16 @@
 <?php
 
+require_once 'Cache/Lite.php';
+
+$cache = new Cache_Lite();
+
+if ($data = $cache->get($_SERVER['REQUEST_URI'])) {
+    print $data;
+    die();
+}
+
+ob_start();
+
 require_once 'Google/Maps.php';
 $map = Google_Maps::create('static');
 
@@ -10,6 +21,9 @@ $zoom = Google_Maps_Control::create('zoom');
 $map->addControl($zoom);
 $pan = Google_Maps_Control::create('pan');
 $map->addControl($pan);
+
+$clusterer = Google_Maps_Clusterer::create('distance');
+$map->setClusterer($clusterer);
 
 $xml = simplexml_load_file('http://kaskoabi.ergoaitab.ee/ergo2.kml', null, LIBXML_NOCDATA);
 
@@ -29,15 +43,6 @@ $map->zoomToFit();
 
 $map->setProperties($_GET);
 
-$clusterer = Google_Maps_Clusterer::create('distance');
-$map->setClusterer($clusterer);
-
-//print_r($map->getClusteredMarkers('array', $map->getBounds()));
-
-/*
-print strlen($map->toUrl());
-print $map->toUrl();
-*/
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -89,7 +94,8 @@ print $map->toUrl();
     <br /><br />
 	  <p>
 	    Markers and infowindow data comes from <a href="http://kaskoabi.ergoaitab.ee/ergo2.kml">KML</a>.
-	    Zooming and panning works. There is noJavaScript (except Google Analytics) used in this page. 
+	    Zooming and panning works. There is noJavaScript (except Google Analytics) used in this page.
+	    Markers are clustered using distance based clustering.
 	    Map is created using following code:
 	  </p>
 	  <p>
@@ -105,6 +111,9 @@ $map->addControl($zoom);
 $pan = Google_Maps_Control::create('pan');
 $map->addControl($pan);
 
+$clusterer = Google_Maps_Clusterer::create('distance');
+$map->setClusterer($clusterer);
+
 $xml = simplexml_load_file('http://kaskoabi.ergoaitab.ee/ergo2.kml', 
                             null, LIBXML_NOCDATA);
 
@@ -113,6 +122,8 @@ foreach ($xml->Document->Placemark as $placemark) {
          explode(',', $placemark->Point->coordinates, 3);
     $coordinate = new Google_Maps_Coordinate($latitude, $longitude);
     $marker = new Google_Maps_Marker($coordinate);
+    $marker->setSize('small');
+    $marker->setColor('blue');
     $bubble = new Google_Maps_Infowindow($placemark->description);
     $bubble->setMarker($marker);
     $map->addMarker($marker);
@@ -173,4 +184,7 @@ $map->setProperties($_GET);</pre>
 
 </body>
 </html>
-
+<?php
+$data = ob_get_contents();
+$cache->save($data);
+?>
