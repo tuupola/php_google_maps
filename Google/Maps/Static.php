@@ -35,9 +35,20 @@ class Google_Maps_Static extends Google_Maps_Overload {
     protected $controls = array();
     protected $min_zoom = 1;
     protected $max_zoom = 21;
+
     protected $clusterer = false;
     protected $url_max_length = 2046; /* TODO: implement URL length protection. */
-    
+    protected $marker_formats = array('%01.2f,%01.2f,%s%s%s', '%01.2f,%01.2f,%s%s%s', 
+                                      '%01.3f,%01.3f,%s%s%s', '%01.3f,%01.3f,%s%s%s',
+                                      '%01.4f,%01.4f,%s%s%s', '%01.4f,%01.4f,%s%s%s',
+                                      '%01.5f,%01.5f,%s%s%s', '%01.5f,%01.5f,%s%s%s',
+                                      '%01.6f,%01.6f,%s%s%s', '%01.6f,%01.6f,%s%s%s',
+                                      '%01.7f,%01.7f,%s%s%s', '%01.7f,%01.7f,%s%s%s',
+                                      '%01.8f,%01.8f,%s%s%s', '%01.8f,%01.8f,%s%s%s',
+                                      '%01.8f,%01.8f,%s%s%s', '%01.8f,%01.8f,%s%s%s',
+                                      '%01.8f,%01.8f,%s%s%s', '%01.8f,%01.8f,%s%s%s',
+                                      '%01.8f,%01.8f,%s%s%s', '%01.8f,%01.8f,%s%s%s',
+                                      '%01.8f,%01.8f,%s%s%s');
     
     /**
     * Class constructor.
@@ -239,9 +250,12 @@ class Google_Maps_Static extends Google_Maps_Overload {
             $markers = $this->markers;
         }
         if ('string' == $type) {
+            $format  = $this->marker_formats[$this->getZoom() - 1];
             $retval = '';
             if (is_array($markers)) {
                 foreach ($markers as $marker) {
+                    $marker->setFormat($format);
+                    print $marker;
                     $retval .= $marker;
                     $retval .= '|';                        
                 }                
@@ -295,9 +309,12 @@ class Google_Maps_Static extends Google_Maps_Overload {
         $markers = $this->getClusterer()->process($markers, $this);
 
         if ('string' == $type) {
+            $format  = $this->marker_formats[$this->getZoom() - 1];
             $retval = '';
             if (is_array($markers)) {
                 foreach ($markers as $marker) {
+                    $marker->setFormat($format);
+                    print $marker;
                     $retval .= $marker;
                     $retval .= '|';                        
                 }                

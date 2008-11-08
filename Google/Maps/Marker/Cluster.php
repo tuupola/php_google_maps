@@ -114,7 +114,8 @@ class Google_Maps_Marker_Cluster extends Google_Maps_Marker {
     }
             
     public function __toString() {
-        $retval = $this->getLat() . ',' . $this->getLon() . ','. $this->getSize() . $this->getColor() . $this->getCharacter();
+        $retval = sprintf($this->getFormat(), $this->getLat(), $this->getLon(), 
+                          $this->getSize(), $this->getColor(), $this->getCharacter());
         return preg_replace('/,$/', '', $retval);
     }
         

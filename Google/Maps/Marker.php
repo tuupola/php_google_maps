@@ -25,6 +25,8 @@ class Google_Maps_Marker extends Google_Maps_Location {
     protected $character;
     protected $infowindow;
     
+    protected $format = '%01.8f,%01.8f,%s%s%s';
+    
     protected $visible = false;
     protected $id;
     static private $counter = 1;
@@ -109,7 +111,8 @@ class Google_Maps_Marker extends Google_Maps_Location {
     }
             
     public function __toString() {
-        $retval = $this->getLat() . ',' . $this->getLon() . ','. $this->getSize() . $this->getColor() . $this->getCharacter();
+        $retval = sprintf($this->getFormat(), $this->getLat(), $this->getLon(), 
+                          $this->getSize(), $this->getColor(), $this->getCharacter());
         return preg_replace('/,$/', '', $retval);
     }
         
