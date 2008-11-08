@@ -255,7 +255,6 @@ class Google_Maps_Static extends Google_Maps_Overload {
             if (is_array($markers)) {
                 foreach ($markers as $marker) {
                     $marker->setFormat($format);
-                    print $marker;
                     $retval .= $marker;
                     $retval .= '|';                        
                 }                
@@ -314,7 +313,6 @@ class Google_Maps_Static extends Google_Maps_Overload {
             if (is_array($markers)) {
                 foreach ($markers as $marker) {
                     $marker->setFormat($format);
-                    print $marker;
                     $retval .= $marker;
                     $retval .= '|';                        
                 }                
