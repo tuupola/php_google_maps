@@ -3,10 +3,13 @@
 require_once 'Cache/Lite.php';
 require_once 'Benchmark/Timer.php';
 
+$options = array(
+    'lifeTime' => 3600000
+);
+
 $cache = new Cache_Lite();
 
-if ($data = $cache->get($_SERVER['REQUEST_URI']) && false) {
-    print "HIT";
+if ($data = $cache->get($_SERVER['REQUEST_URI'])) {
     print $data;
     die();
 }
@@ -21,6 +24,7 @@ $map = Google_Maps::create('static');
 
 $map->setKey(trim(file_get_contents('api_key.txt')));
 $map->setSize('540x300');
+$map->setType('terrain');
 
 $zoom = Google_Maps_Control::create('zoom');
 $map->addControl($zoom);
@@ -122,7 +126,7 @@ $timer->stop();
     <br /><br />
 	  <p>
 	    Markers are created from <a href="http://www.appelsiini.net/projects/php_google_maps/cities.kml">KML</a>. Markers are clustered using
-	    <a href="#">distance based clustering</a>.
+	    <a href="http://www.appelsiini.net/2008/11/introduction-to-marker-clustering-with-google-maps">distance based clustering</a>.
 	    Zooming and panning works. There is no JavaScript (except Google Analytics) used in this page. 
 	    Map is created using following code:
 	  </p>
@@ -132,7 +136,9 @@ $timer->stop();
 require_once 'Google/Maps.php';
 $map = Google_Maps::create('static');
 
-$map->setKey(API_KEY);$map->setSize('540x300');
+$map->setKey(API_KEY);
+$map->setSize('540x300');
+$map->setType('terrain');
 
 $zoom = Google_Maps_Control::create('zoom');
 $map->addControl($zoom);
