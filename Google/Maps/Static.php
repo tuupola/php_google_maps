@@ -523,7 +523,7 @@ class Google_Maps_Static extends Google_Maps_Overload {
     public function toQueryString($include_all = false) {        
         $url['center'] = $this->getCenter()->__toString();
 
-        //$url['infowindow'] = '';
+        $url['infowindow'] = '';
         foreach ($this->getInfowindows() as $infowindow) {
             if ($infowindow->isVisible()) {
                 $url['infowindow'] = $infowindow->getMarker()->getId();
