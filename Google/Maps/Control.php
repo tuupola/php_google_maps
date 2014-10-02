@@ -23,7 +23,7 @@ require_once 'Google/Maps/Path.php';
 
 class Google_Maps_Control extends Google_Maps_Overload {
         
-    public function create($type, $params = array()) {
+    public static function create($type, $params = array()) {
         $class_name = 'Google_Maps_Control_' . ucfirst($type);
         $file_name  = str_replace('_', DIRECTORY_SEPARATOR, $class_name).'.php';
         require_once $file_name;

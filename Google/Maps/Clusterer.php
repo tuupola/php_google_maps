@@ -18,7 +18,7 @@ require_once 'Google/Maps/Overload.php';
 
 class Google_Maps_Clusterer {
         
-    public function create($type, $params = array()) {
+    public static function create($type, $params = array()) {
         $class_name = 'Google_Maps_Clusterer_' . ucfirst($type);
         $file_name  = str_replace('_', DIRECTORY_SEPARATOR, $class_name).'.php';
         require_once $file_name;

@@ -38,17 +38,17 @@ class Google_Maps_Static extends Google_Maps_Overload {
 
     protected $clusterer = false;
     protected $url_max_length = 2046; /* TODO: implement URL length protection. */
-    protected $marker_formats = array('%01.2f,%01.2f,%s%s%s', '%01.2f,%01.2f,%s%s%s', 
-                                      '%01.3f,%01.3f,%s%s%s', '%01.3f,%01.3f,%s%s%s',
-                                      '%01.4f,%01.4f,%s%s%s', '%01.4f,%01.4f,%s%s%s',
-                                      '%01.5f,%01.5f,%s%s%s', '%01.5f,%01.5f,%s%s%s',
-                                      '%01.6f,%01.6f,%s%s%s', '%01.6f,%01.6f,%s%s%s',
-                                      '%01.7f,%01.7f,%s%s%s', '%01.7f,%01.7f,%s%s%s',
-                                      '%01.8f,%01.8f,%s%s%s', '%01.8f,%01.8f,%s%s%s',
-                                      '%01.8f,%01.8f,%s%s%s', '%01.8f,%01.8f,%s%s%s',
-                                      '%01.8f,%01.8f,%s%s%s', '%01.8f,%01.8f,%s%s%s',
-                                      '%01.8f,%01.8f,%s%s%s', '%01.8f,%01.8f,%s%s%s',
-                                      '%01.8f,%01.8f,%s%s%s');
+    protected $marker_formats = array('%s%s%01.2f,%01.2f,%s', '%s%s%01.2f,%01.2f,%s', 
+                                      '%s%s%01.3f,%01.3f,%s', '%s%s%01.3f,%01.3f,%s',
+                                      '%s%s%01.4f,%01.4f,%s', '%s%s%01.4f,%01.4f,%s',
+                                      '%s%s%01.5f,%01.5f,%s', '%s%s%01.5f,%01.5f,%s',
+                                      '%s%s%01.6f,%01.6f,%s', '%s%s%01.6f,%01.6f,%s',
+                                      '%s%s%01.7f,%01.7f,%s', '%s%s%01.7f,%01.7f,%s',
+                                      '%s%s%01.8f,%01.8f,%s', '%s%s%01.8f,%01.8f,%s',
+                                      '%s%s%01.8f,%01.8f,%s', '%s%s%01.8f,%01.8f,%s',
+                                      '%s%s%01.8f,%01.8f,%s', '%s%s%01.8f,%01.8f,%s',
+                                      '%s%s%01.8f,%01.8f,%s', '%s%s%01.8f,%01.8f,%s',
+                                      '%s%s%01.8f,%01.8f,%s');
     
     /**
     * Class constructor.
@@ -131,12 +131,14 @@ class Google_Maps_Static extends Google_Maps_Overload {
     public function zoomToFit() {
         $zoom    = 21;
         $found   = false;
-        $marker_bounds = $this->getMarkerBounds();
-        while ($found == false) {
-            $map_bounds = $this->getBounds($zoom);
-            $found = $map_bounds->contains($marker_bounds);
-            $zoom--;
-        }
+        if (count($this->markers) > 0) {
+            $marker_bounds = $this->getMarkerBounds();
+            while ($found == false) {
+                $map_bounds = $this->getBounds($zoom);
+                $found = $map_bounds->contains($marker_bounds);
+                $zoom--;
+            }
+        } else $zoom = 0; // zoom Map monde        
         $this->setZoom($zoom + 1);
         return $zoom;
     }
@@ -255,9 +257,9 @@ class Google_Maps_Static extends Google_Maps_Overload {
             if (is_array($markers)) {
                 foreach ($markers as $marker) {
                     $marker->setFormat($format);
-                    $retval .= $marker;
-                    $retval .= '|';                        
+                    $retval[] = preg_replace('/\|$/', '',$marker);
                 }                
+            } else {
                 $retval = preg_replace('/\|$/', '', $retval);
             }
         } else {
@@ -534,7 +536,10 @@ class Google_Maps_Static extends Google_Maps_Overload {
             if ($this->getClusterer()) {
                 $url['markers'] = $this->getClusteredMarkers('string', $this->getBounds());
             } else {
-                $url['markers'] = $this->getMarkers('string', $this->getBounds());                
+                if (count($this->markers) > 0) {
+                    $markers = $this->getMarkers('string', $this->getBounds());
+                    $url['markers'] = $markers;
+                }
             }
             $url['path'] = $this->getPath('string');
             $url['size'] = $this->getSize();
@@ -542,7 +547,9 @@ class Google_Maps_Static extends Google_Maps_Overload {
             $url['key'] = $this->getKey();            
         }
         
-        return http_build_query($url);
+        $retval = http_build_query($url,'','&');
+        $retval = preg_replace('/%5B(?:[0-9]|[1-9][0-9]+)%5D=/', '=', $retval);
+        return str_replace('&amp;', '&', $retval);
     }
 
     /**
@@ -550,7 +557,7 @@ class Google_Maps_Static extends Google_Maps_Overload {
     * 
     * @return   string Static map image URL.
     */
-    public function toUrl($prefix='http://maps.google.com/staticmap?', $full=true) {
+    public function toUrl($prefix='http://maps.googleapis.com/maps/api/staticmap?', $full=true) {
         return $prefix . $this->toQueryString($full);
     }
         
@@ -559,9 +566,31 @@ class Google_Maps_Static extends Google_Maps_Overload {
     * 
     * @return   string Static map image URL.
     */
-    public function toImgTag() {
-        return sprintf('<img src="%s" width="%d" height="%d" alt="" usemap="#marker_map"/>',
-                        $this->toUrl(), $this->getWidth(), $this->getHeight());
+    public function toImgTag($id = '', $class = '', $addlink = FALSE) {
+        $retval = sprintf('<img %s %s src="%s" width="%d" height="%d" alt="" usemap="#marker_map"/>',
+                        (trim($id)) ? 'id="'.$id.'"' : '', 
+                        (trim($class)) ? 'class="'.$class.'"' : '',
+                        $this->toUrl().'&sensor=false', $this->getWidth(), $this->getHeight());
+        if ($addlink) {
+            if (count($this->markers) > 0) {
+                $center = $this->calculateCenter();
+            
+                return sprintf('<a %s href="https://maps.google.com/maps?q=%s,%s&t=m&z=%s" target="_blank">%s</a>',
+                    (trim($id)) ? 'id="a_'.$id.'"' : '',
+                    $center->getLat(), 
+                    $center->getLon(), 
+                    $this->zoomToFit(), 
+                    $retval);            
+            } else {
+                return sprintf('<a %s href="https://maps.google.com/maps?t=m&z=%s" target="_blank">%s</a>',
+                        (trim($id)) ? 'id="a_'.$id.'"' : '',
+                        $this->zoomToFit(), 
+                        $retval);
+            }
+            
+        } else {
+            return $retval;
+        }
     }
     
     /**

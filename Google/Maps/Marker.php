@@ -25,7 +25,7 @@ class Google_Maps_Marker extends Google_Maps_Location {
     protected $character;
     protected $infowindow;
     
-    protected $format = '%01.8f,%01.8f,%s%s%s';
+    protected $format = '%s%s%01.8f,%01.8f,%s';
     
     protected $visible = false;
     protected $id;
@@ -104,15 +104,24 @@ class Google_Maps_Marker extends Google_Maps_Location {
     */
     public function getColor() {
         $retval = $this->color;
-        if ($this->getCharacter() && !trim($retval)) {
-            $retval = 'red';
+        if (!trim($this->character)) {
+            if (trim($retval)) $retval .= '|';
         }
-        return $retval;
+        return (trim($retval)) ? 'color:'.$retval : '';
+    }
+    
+    public function getCharacter() {
+        $retval = $this->character;
+        $firstchar = '';
+        if (trim($this->color)) {
+            if (trim($retval)) $firstchar = '|';
+        }
+        return (trim($retval)) ? $firstchar.'label:'.$retval.'|' : '';
     }
             
     public function __toString() {
-        $retval = sprintf($this->getFormat(), $this->getLat(), $this->getLon(), 
-                          $this->getSize(), $this->getColor(), $this->getCharacter());
+        $retval = sprintf($this->getFormat(), $this->getColor(), $this->getCharacter(), $this->getLat(), $this->getLon(), 
+                          $this->getSize());
         return preg_replace('/,$/', '', $retval);
     }
         
